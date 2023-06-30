@@ -1,0 +1,18 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+overrides:
+  vite: link:./vite
+
+importers:
+
+  .:
+    devDependencies:
+      vite:
+        specifier: link:vite
+        version: link:vite
+
+  vite/types: {}
