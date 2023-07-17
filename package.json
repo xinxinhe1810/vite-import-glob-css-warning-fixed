@@ -7,14 +7,16 @@
     "start:dev": "cd vite && pnpm i && cd .. && pnpm i && pnpm dev",
     "dev": "vite",
     "build": "vite build",
+    "build:dev": "NODE_ENV=development vite build --mode=development",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@vitejs/plugin-legacy": "^4.1.0",
     "vite": "^4.1.0"
   },
   "pnpm": {
     "overrides": {
-      "vite": "link:./vite"
+      "vite": "file:./vite"
     }
   },
   "packageManager": "pnpm@8.6.2",
