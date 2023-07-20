@@ -17,3 +17,5 @@ const asyncImport = async () => {
         // console.log(mod2[key].default)
     });
 };
+
+asyncImport()

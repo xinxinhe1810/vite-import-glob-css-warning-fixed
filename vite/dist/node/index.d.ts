@@ -1403,7 +1403,7 @@ export declare class ModuleGraph {
     getModuleById(id: string): ModuleNode | undefined;
     getModulesByFile(file: string): Set<ModuleNode> | undefined;
     onFileChange(file: string): void;
-    invalidateModule(mod: ModuleNode, seen?: Set<ModuleNode>, timestamp?: number, isHmr?: boolean): void;
+    invalidateModule(mod: ModuleNode, seen?: Set<ModuleNode>, timestamp?: number, isHmr?: boolean, hmrBoundaries?: ModuleNode[]): void;
     invalidateAll(): void;
     /**
      * Update the module graph based on a module's updated imports information

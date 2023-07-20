@@ -6,7 +6,7 @@ import { promisify as promisify$4, format as format$2, inspect } from 'node:util
 import { performance } from 'node:perf_hooks';
 import { createRequire as createRequire$1, builtinModules } from 'node:module';
 import require$$0$3 from 'tty';
-import esbuild, { transform as transform$2, formatMessages, build as build$3 } from 'esbuild';
+import esbuild, { transform as transform$1, formatMessages, build as build$3 } from 'esbuild';
 import require$$0$4, { win32, posix, isAbsolute as isAbsolute$1, resolve as resolve$3, relative as relative$1, basename as basename$1, extname, dirname as dirname$1, join as join$1, sep as sep$1, normalize } from 'path';
 import * as require$$0$2 from 'fs';
 import require$$0__default, { existsSync, readFileSync, statSync as statSync$1, promises as promises$1, readdir as readdir$4, readdirSync } from 'fs';
@@ -19,7 +19,7 @@ import require$$1$1 from 'http';
 import require$$0$7 from 'stream';
 import require$$2 from 'os';
 import require$$2$1 from 'child_process';
-import os$3 from 'node:os';
+import os$4 from 'node:os';
 import { exec } from 'node:child_process';
 import { createHash as createHash$2 } from 'node:crypto';
 import { promises } from 'node:dns';
@@ -6082,18 +6082,18 @@ function requireGlob () {
 var globExports = requireGlob();
 var glob$1 = /*@__PURE__*/getDefaultExportFromCjs(globExports);
 
-const comma = ','.charCodeAt(0);
-const semicolon = ';'.charCodeAt(0);
-const chars$1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-const intToChar = new Uint8Array(64); // 64 possible chars.
-const charToInt = new Uint8Array(128); // z is 122 in ASCII
-for (let i = 0; i < chars$1.length; i++) {
-    const c = chars$1.charCodeAt(i);
-    intToChar[i] = c;
-    charToInt[c] = i;
+const comma$1 = ','.charCodeAt(0);
+const semicolon$1 = ';'.charCodeAt(0);
+const chars$2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+const intToChar$1 = new Uint8Array(64); // 64 possible chars.
+const charToInt$1 = new Uint8Array(128); // z is 122 in ASCII
+for (let i = 0; i < chars$2.length; i++) {
+    const c = chars$2.charCodeAt(i);
+    intToChar$1[i] = c;
+    charToInt$1[c] = i;
 }
 // Provide a fallback for older environments.
-const td = typeof TextDecoder !== 'undefined'
+const td$1 = typeof TextDecoder !== 'undefined'
     ? /* #__PURE__ */ new TextDecoder()
     : typeof Buffer !== 'undefined'
         ? {
@@ -6162,7 +6162,7 @@ function decodeInteger(mappings, pos, state, j) {
     let integer = 0;
     do {
         const c = mappings.charCodeAt(pos++);
-        integer = charToInt[c];
+        integer = charToInt$1[c];
         value |= (integer & 31) << shift;
         shift += 5;
     } while (integer & 32);
@@ -6177,7 +6177,7 @@ function decodeInteger(mappings, pos, state, j) {
 function hasMoreVlq(mappings, i, length) {
     if (i >= length)
         return false;
-    return mappings.charCodeAt(i) !== comma;
+    return mappings.charCodeAt(i) !== comma$1;
 }
 function sort(line) {
     line.sort(sortComparator$1);
@@ -6185,7 +6185,7 @@ function sort(line) {
 function sortComparator$1(a, b) {
     return a[0] - b[0];
 }
-function encode$1(decoded) {
+function encode$2(decoded) {
     const state = new Int32Array(5);
     const bufLength = 1024 * 16;
     const subLength = bufLength - 36;
@@ -6197,10 +6197,10 @@ function encode$1(decoded) {
         const line = decoded[i];
         if (i > 0) {
             if (pos === bufLength) {
-                out += td.decode(buf);
+                out += td$1.decode(buf);
                 pos = 0;
             }
-            buf[pos++] = semicolon;
+            buf[pos++] = semicolon$1;
         }
         if (line.length === 0)
             continue;
@@ -6210,26 +6210,26 @@ function encode$1(decoded) {
             // We can push up to 5 ints, each int can take at most 7 chars, and we
             // may push a comma.
             if (pos > subLength) {
-                out += td.decode(sub);
+                out += td$1.decode(sub);
                 buf.copyWithin(0, subLength, pos);
                 pos -= subLength;
             }
             if (j > 0)
-                buf[pos++] = comma;
-            pos = encodeInteger(buf, pos, state, segment, 0); // genColumn
+                buf[pos++] = comma$1;
+            pos = encodeInteger$1(buf, pos, state, segment, 0); // genColumn
             if (segment.length === 1)
                 continue;
-            pos = encodeInteger(buf, pos, state, segment, 1); // sourcesIndex
-            pos = encodeInteger(buf, pos, state, segment, 2); // sourceLine
-            pos = encodeInteger(buf, pos, state, segment, 3); // sourceColumn
+            pos = encodeInteger$1(buf, pos, state, segment, 1); // sourcesIndex
+            pos = encodeInteger$1(buf, pos, state, segment, 2); // sourceLine
+            pos = encodeInteger$1(buf, pos, state, segment, 3); // sourceColumn
             if (segment.length === 4)
                 continue;
-            pos = encodeInteger(buf, pos, state, segment, 4); // namesIndex
+            pos = encodeInteger$1(buf, pos, state, segment, 4); // namesIndex
         }
     }
-    return out + td.decode(buf.subarray(0, pos));
+    return out + td$1.decode(buf.subarray(0, pos));
 }
-function encodeInteger(buf, pos, state, segment, j) {
+function encodeInteger$1(buf, pos, state, segment, j) {
     const next = segment[j];
     let num = next - state[j];
     state[j] = next;
@@ -6239,7 +6239,7 @@ function encodeInteger(buf, pos, state, segment, j) {
         num >>>= 5;
         if (num > 0)
             clamped |= 0b100000;
-        buf[pos++] = intToChar[clamped];
+        buf[pos++] = intToChar$1[clamped];
     } while (num > 0);
     return pos;
 }
@@ -6433,7 +6433,7 @@ let SourceMap$2 = class SourceMap {
 		this.sources = properties.sources;
 		this.sourcesContent = properties.sourcesContent;
 		this.names = properties.names;
-		this.mappings = encode$1(properties.mappings);
+		this.mappings = encode$2(properties.mappings);
 	}
 
 	toString() {
@@ -7413,7 +7413,7 @@ function isReference(node, parent) {
     return false;
 }
 
-var version$3 = "25.0.1";
+var version$3 = "25.0.2";
 var peerDependencies = {
 	rollup: "^2.68.0||^3.0.0"
 };
@@ -8899,6 +8899,7 @@ async function transformCommonjs(
   let scope = attachScopes(ast, 'scope');
   let lexicalDepth = 0;
   let programDepth = 0;
+  let classBodyDepth = 0;
   let currentTryBlockEnd = null;
   let shouldWrap = false;
 
@@ -9081,6 +9082,9 @@ async function transformCommonjs(
           }
           return;
         }
+        case 'ClassBody':
+          classBodyDepth += 1;
+          return;
         case 'ConditionalExpression':
         case 'IfStatement':
           // skip dead branches
@@ -9177,7 +9181,7 @@ async function transformCommonjs(
           return;
         case 'ThisExpression':
           // rewrite top-level `this` as `commonjsHelpers.commonjsGlobal`
-          if (lexicalDepth === 0) {
+          if (lexicalDepth === 0 && !classBodyDepth) {
             uses.global = true;
             if (!ignoreGlobal) {
               replacedGlobal.push(node);
@@ -9228,6 +9232,7 @@ async function transformCommonjs(
       programDepth -= 1;
       if (node.scope) scope = scope.parent;
       if (functionType.test(node.type)) lexicalDepth -= 1;
+      if (node.type === 'ClassBody') classBodyDepth -= 1;
     }
   });
 
@@ -10249,7 +10254,7 @@ class GenMapping {
     };
     toEncodedMap = (map) => {
         const decoded = toDecodedMap(map);
-        return Object.assign(Object.assign({}, decoded), { mappings: encode$1(decoded.mappings) });
+        return Object.assign(Object.assign({}, decoded), { mappings: encode$2(decoded.mappings) });
     };
     // Internal helpers
     addSegmentInternal = (skipable, map, genLine, genColumn, source, sourceLine, sourceColumn, name, content) => {
@@ -11903,7 +11908,7 @@ function isUrl(path) {
     }
 }
 const isCaseInsensitiveFS = testCaseInsensitiveFS();
-const isWindows$4 = os$3.platform() === 'win32';
+const isWindows$4 = os$4.platform() === 'win32';
 const VOLUME_RE = /^[A-Z]:/i;
 function normalizePath$3(id) {
     return path$o.posix.normalize(isWindows$4 ? slash$1(id) : id);
@@ -12351,7 +12356,7 @@ const nullSourceMap = {
     mappings: '',
     version: 3,
 };
-function combineSourcemaps(filename, sourcemapList, excludeContent = true) {
+function combineSourcemaps(filename, sourcemapList) {
     if (sourcemapList.length === 0 ||
         sourcemapList.every((m) => m.sources.length === 0)) {
         return { ...nullSourceMap };
@@ -12373,7 +12378,7 @@ function combineSourcemaps(filename, sourcemapList, excludeContent = true) {
     let mapIndex = 1;
     const useArrayInterface = sourcemapList.slice(0, -1).find((m) => m.sources.length !== 1) === undefined;
     if (useArrayInterface) {
-        map = remapping(sourcemapList, () => null, excludeContent);
+        map = remapping(sourcemapList, () => null);
     }
     else {
         map = remapping(sourcemapList[0], function loader(sourcefile) {
@@ -12383,7 +12388,7 @@ function combineSourcemaps(filename, sourcemapList, excludeContent = true) {
             else {
                 return null;
             }
-        }, excludeContent);
+        });
     }
     if (!map.file) {
         delete map.file;
@@ -12470,7 +12475,7 @@ async function resolveServerUrls(server, options, config) {
         }
     }
     else {
-        Object.values(os$3.networkInterfaces())
+        Object.values(os$4.networkInterfaces())
             .flatMap((nInterface) => nInterface ?? [])
             .filter((detail) => detail &&
             detail.address &&
@@ -13808,6 +13813,13 @@ async function transformWithEsbuild(code, filename, options, inMap) {
             ...compilerOptionsForFile,
             ...tsconfigRaw?.compilerOptions,
         };
+        // esbuild uses `useDefineForClassFields: true` when `tsconfig.compilerOptions.target` isn't declared
+        // but we want `useDefineForClassFields: false` when `tsconfig.compilerOptions.target` isn't declared
+        // to align with the TypeScript's behavior
+        if (compilerOptions.useDefineForClassFields === undefined &&
+            compilerOptions.target === undefined) {
+            compilerOptions.useDefineForClassFields = false;
+        }
         // esbuild uses tsconfig fields when both the normal options and tsconfig was set
         // but we want to prioritize the normal options
         if (options) {
@@ -13838,7 +13850,7 @@ async function transformWithEsbuild(code, filename, options, inMap) {
     // @ts-expect-error jsxInject exists in ESBuildOptions
     delete resolvedOptions.jsxInject;
     try {
-        const result = await transform$2(code, resolvedOptions);
+        const result = await transform$1(code, resolvedOptions);
         let map;
         if (inMap && resolvedOptions.sourcemap) {
             const nextMap = JSON.parse(result.map);
@@ -14803,6 +14815,94 @@ function lookup(extn) {
 	let tmp = ('' + extn).trim().toLowerCase();
 	let idx = tmp.lastIndexOf('.');
 	return mimes$1[!~idx ? tmp : tmp.substring(++idx)];
+}
+
+const comma = ','.charCodeAt(0);
+const semicolon = ';'.charCodeAt(0);
+const chars$1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+const intToChar = new Uint8Array(64); // 64 possible chars.
+const charToInt = new Uint8Array(128); // z is 122 in ASCII
+for (let i = 0; i < chars$1.length; i++) {
+    const c = chars$1.charCodeAt(i);
+    intToChar[i] = c;
+    charToInt[c] = i;
+}
+// Provide a fallback for older environments.
+const td = typeof TextDecoder !== 'undefined'
+    ? /* #__PURE__ */ new TextDecoder()
+    : typeof Buffer !== 'undefined'
+        ? {
+            decode(buf) {
+                const out = Buffer.from(buf.buffer, buf.byteOffset, buf.byteLength);
+                return out.toString();
+            },
+        }
+        : {
+            decode(buf) {
+                let out = '';
+                for (let i = 0; i < buf.length; i++) {
+                    out += String.fromCharCode(buf[i]);
+                }
+                return out;
+            },
+        };
+function encode$1(decoded) {
+    const state = new Int32Array(5);
+    const bufLength = 1024 * 16;
+    const subLength = bufLength - 36;
+    const buf = new Uint8Array(bufLength);
+    const sub = buf.subarray(0, subLength);
+    let pos = 0;
+    let out = '';
+    for (let i = 0; i < decoded.length; i++) {
+        const line = decoded[i];
+        if (i > 0) {
+            if (pos === bufLength) {
+                out += td.decode(buf);
+                pos = 0;
+            }
+            buf[pos++] = semicolon;
+        }
+        if (line.length === 0)
+            continue;
+        state[0] = 0;
+        for (let j = 0; j < line.length; j++) {
+            const segment = line[j];
+            // We can push up to 5 ints, each int can take at most 7 chars, and we
+            // may push a comma.
+            if (pos > subLength) {
+                out += td.decode(sub);
+                buf.copyWithin(0, subLength, pos);
+                pos -= subLength;
+            }
+            if (j > 0)
+                buf[pos++] = comma;
+            pos = encodeInteger(buf, pos, state, segment, 0); // genColumn
+            if (segment.length === 1)
+                continue;
+            pos = encodeInteger(buf, pos, state, segment, 1); // sourcesIndex
+            pos = encodeInteger(buf, pos, state, segment, 2); // sourceLine
+            pos = encodeInteger(buf, pos, state, segment, 3); // sourceColumn
+            if (segment.length === 4)
+                continue;
+            pos = encodeInteger(buf, pos, state, segment, 4); // namesIndex
+        }
+    }
+    return out + td.decode(buf.subarray(0, pos));
+}
+function encodeInteger(buf, pos, state, segment, j) {
+    const next = segment[j];
+    let num = next - state[j];
+    state[j] = next;
+    num = num < 0 ? (-num << 1) | 1 : num << 1;
+    do {
+        let clamped = num & 0b011111;
+        num >>>= 5;
+        if (num > 0)
+            clamped |= 0b100000;
+        buf[pos++] = intToChar[clamped];
+    } while (num > 0);
+    return pos;
 }
 
 class BitSet {
@@ -16327,6 +16427,8 @@ function manifestPlugin(config) {
 }
 
 // This is based on @rollup/plugin-data-uri
+// MIT Licensed https://github.com/rollup/plugins/blob/master/LICENSE
+// ref https://github.com/vitejs/vite/issues/1428#issuecomment-757033808
 const dataUriRE = /^([^/]+\/[^;,]+)(;base64)?,([\s\S]*)$/;
 const base64RE = /base64/i;
 const dataUriPrefix = `\0/@data-uri/`;
@@ -16629,19 +16731,25 @@ async function injectSourcesContent(map, file, logger) {
     }
     catch { }
     const missingSources = [];
-    map.sourcesContent = await Promise.all(map.sources.map((sourcePath) => {
+    const sourcesContent = map.sourcesContent || [];
+    await Promise.all(map.sources.map(async (sourcePath, index) => {
+        let content = null;
         if (sourcePath && !virtualSourceRE.test(sourcePath)) {
             sourcePath = decodeURI(sourcePath);
             if (sourceRoot) {
                 sourcePath = path$o.resolve(sourceRoot, sourcePath);
             }
-            return fsp.readFile(sourcePath, 'utf-8').catch(() => {
-                missingSources.push(sourcePath);
-                return null;
-            });
+            // inject content from source file when sourcesContent is null
+            content =
+                sourcesContent[index] ??
+                    (await fsp.readFile(sourcePath, 'utf-8').catch(() => {
+                        missingSources.push(sourcePath);
+                        return null;
+                    }));
         }
-        return null;
+        sourcesContent[index] = content;
     }));
+    map.sourcesContent = sourcesContent;
     // Use this command…
     //    DEBUG="vite:sourcemap" vite build
     // …to log the missing sources.
@@ -16754,10 +16862,29 @@ fs$h.createDirentFromStats = createDirentFromStats$1;
 var path$h = {};
 
 Object.defineProperty(path$h, "__esModule", { value: true });
-path$h.removeLeadingDotSegment = path$h.escape = path$h.makeAbsolute = path$h.unixify = void 0;
+path$h.convertPosixPathToPattern = path$h.convertWindowsPathToPattern = path$h.convertPathToPattern = path$h.escapePosixPath = path$h.escapeWindowsPath = path$h.escape = path$h.removeLeadingDotSegment = path$h.makeAbsolute = path$h.unixify = void 0;
+const os$3 = require$$2;
 const path$g = require$$0$4;
+const IS_WINDOWS_PLATFORM = os$3.platform() === 'win32';
 const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\
-const UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\())/g;
+/**
+ * All non-escaped special characters.
+ * Posix: ()*?[\]{|}, !+@ before (, ! at the beginning, \\ before non-special characters.
+ * Windows: (){}, !+@ before (, ! at the beginning.
+ */
+const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
+const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([(){}]|^!|[!+@](?=\())/g;
+/**
+ * The device path (\\.\ or \\?\).
+ * https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths
+ */
+const DOS_DEVICE_PATH_RE = /^\\\\([.?])/;
+/**
+ * All backslashes except those escaping special characters.
+ * Windows: !()+@{}
+ * https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
+ */
+const WINDOWS_BACKSLASHES_RE = /\\(?![!()+@{}])/g;
 /**
  * Designed to work only with simple paths: `dir\\file`.
  */
@@ -16769,10 +16896,6 @@ function makeAbsolute(cwd, filepath) {
     return path$g.resolve(cwd, filepath);
 }
 path$h.makeAbsolute = makeAbsolute;
-function escape$2(pattern) {
-    return pattern.replace(UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
-}
-path$h.escape = escape$2;
 function removeLeadingDotSegment(entry) {
     // We do not use `startsWith` because this is 10x slower than current implementation for some cases.
     // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
@@ -16785,6 +16908,26 @@ function removeLeadingDotSegment(entry) {
     return entry;
 }
 path$h.removeLeadingDotSegment = removeLeadingDotSegment;
+path$h.escape = IS_WINDOWS_PLATFORM ? escapeWindowsPath : escapePosixPath;
+function escapeWindowsPath(pattern) {
+    return pattern.replace(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+}
+path$h.escapeWindowsPath = escapeWindowsPath;
+function escapePosixPath(pattern) {
+    return pattern.replace(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+}
+path$h.escapePosixPath = escapePosixPath;
+path$h.convertPathToPattern = IS_WINDOWS_PLATFORM ? convertWindowsPathToPattern : convertPosixPathToPattern;
+function convertWindowsPathToPattern(filepath) {
+    return escapeWindowsPath(filepath)
+        .replace(DOS_DEVICE_PATH_RE, '//$1')
+        .replace(WINDOWS_BACKSLASHES_RE, '/');
+}
+path$h.convertWindowsPathToPattern = convertWindowsPathToPattern;
+function convertPosixPathToPattern(filepath) {
+    return escapePosixPath(filepath);
+}
+path$h.convertPosixPathToPattern = convertPosixPathToPattern;
 
 var pattern$1 = {};
 
@@ -17463,7 +17606,7 @@ const toRegexRange = toRegexRange_1;
 
 const isObject = val => val !== null && typeof val === 'object' && !Array.isArray(val);
 
-const transform$1 = toNumber => {
+const transform = toNumber => {
   return value => toNumber === true ? Number(value) : String(value);
 };
 
@@ -17600,7 +17743,7 @@ const fillNumbers = (start, end, step = 1, options = {}) => {
   let padded = zeros(startString) || zeros(endString) || zeros(stepString);
   let maxLen = padded ? Math.max(startString.length, endString.length, stepString.length) : 0;
   let toNumber = padded === false && stringify$6(start, end, options) === false;
-  let format = options.transform || transform$1(toNumber);
+  let format = options.transform || transform(toNumber);
 
   if (options.toRegex && step === 1) {
     return toRange(toMaxLen(start, maxLen), toMaxLen(end, maxLen), true, options);
@@ -18890,7 +19033,7 @@ var micromatch_1 = micromatch$1;
 var micromatch$2 = /*@__PURE__*/getDefaultExportFromCjs(micromatch_1);
 
 Object.defineProperty(pattern$1, "__esModule", { value: true });
-pattern$1.matchAny = pattern$1.convertPatternsToRe = pattern$1.makeRe = pattern$1.getPatternParts = pattern$1.expandBraceExpansion = pattern$1.expandPatternsWithBraceExpansion = pattern$1.isAffectDepthOfReadingPattern = pattern$1.endsWithSlashGlobStar = pattern$1.hasGlobStar = pattern$1.getBaseDirectory = pattern$1.isPatternRelatedToParentDirectory = pattern$1.getPatternsOutsideCurrentDirectory = pattern$1.getPatternsInsideCurrentDirectory = pattern$1.getPositivePatterns = pattern$1.getNegativePatterns = pattern$1.isPositivePattern = pattern$1.isNegativePattern = pattern$1.convertToNegativePattern = pattern$1.convertToPositivePattern = pattern$1.isDynamicPattern = pattern$1.isStaticPattern = void 0;
+pattern$1.removeDuplicateSlashes = pattern$1.matchAny = pattern$1.convertPatternsToRe = pattern$1.makeRe = pattern$1.getPatternParts = pattern$1.expandBraceExpansion = pattern$1.expandPatternsWithBraceExpansion = pattern$1.isAffectDepthOfReadingPattern = pattern$1.endsWithSlashGlobStar = pattern$1.hasGlobStar = pattern$1.getBaseDirectory = pattern$1.isPatternRelatedToParentDirectory = pattern$1.getPatternsOutsideCurrentDirectory = pattern$1.getPatternsInsideCurrentDirectory = pattern$1.getPositivePatterns = pattern$1.getNegativePatterns = pattern$1.isPositivePattern = pattern$1.isNegativePattern = pattern$1.convertToNegativePattern = pattern$1.convertToPositivePattern = pattern$1.isDynamicPattern = pattern$1.isStaticPattern = void 0;
 const path$f = require$$0$4;
 const globParent$1 = globParent$2;
 const micromatch = micromatch_1;
@@ -18901,6 +19044,11 @@ const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*]/;
 const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^!*+?@])\([^(]*\|[^|]*\)/;
 const GLOB_EXTENSION_SYMBOLS_RE = /[!*+?@]\([^(]*\)/;
 const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
+/**
+ * Matches a sequence of two or more consecutive slashes, excluding the first two slashes at the beginning of the string.
+ * The latter is due to the presence of the device path at the beginning of the UNC path.
+ */
+const DOUBLE_SLASH_RE$1 = /(?!^)\/{2,}/g;
 function isStaticPattern(pattern, options = {}) {
     return !isDynamicPattern(pattern, options);
 }
@@ -19019,10 +19167,16 @@ function expandPatternsWithBraceExpansion(patterns) {
 }
 pattern$1.expandPatternsWithBraceExpansion = expandPatternsWithBraceExpansion;
 function expandBraceExpansion(pattern) {
-    return micromatch.braces(pattern, {
-        expand: true,
-        nodupes: true
-    });
+    const patterns = micromatch.braces(pattern, { expand: true, nodupes: true });
+    /**
+     * Sort the patterns by length so that the same depth patterns are processed side by side.
+     * `a/{b,}/{c,}/*` – `['a///*', 'a/b//*', 'a//c/*', 'a/b/c/*']`
+     */
+    patterns.sort((a, b) => a.length - b.length);
+    /**
+     * Micromatch can return an empty string in the case of patterns like `{a,}`.
+     */
+    return patterns.filter((pattern) => pattern !== '');
 }
 pattern$1.expandBraceExpansion = expandBraceExpansion;
 function getPatternParts(pattern, options) {
@@ -19057,6 +19211,14 @@ function matchAny(entry, patternsRe) {
     return patternsRe.some((patternRe) => patternRe.test(entry));
 }
 pattern$1.matchAny = matchAny;
+/**
+ * This package only works with forward slashes as a path separator.
+ * Because of this, we cannot use the standard `path.normalize` method, because on Windows platform it will use of backslashes.
+ */
+function removeDuplicateSlashes(pattern) {
+    return pattern.replace(DOUBLE_SLASH_RE$1, '/');
+}
+pattern$1.removeDuplicateSlashes = removeDuplicateSlashes;
 
 var stream$4 = {};
 
@@ -19254,9 +19416,11 @@ utils$g.string = string$1;
 Object.defineProperty(tasks, "__esModule", { value: true });
 tasks.convertPatternGroupToTask = tasks.convertPatternGroupsToTasks = tasks.groupPatternsByBaseDirectory = tasks.getNegativePatternsAsPositive = tasks.getPositivePatterns = tasks.convertPatternsToTasks = tasks.generate = void 0;
 const utils$a = utils$g;
-function generate(patterns, settings) {
+function generate(input, settings) {
+    const patterns = processPatterns(input, settings);
+    const ignore = processPatterns(settings.ignore, settings);
     const positivePatterns = getPositivePatterns(patterns);
-    const negativePatterns = getNegativePatternsAsPositive(patterns, settings.ignore);
+    const negativePatterns = getNegativePatternsAsPositive(patterns, ignore);
     const staticPatterns = positivePatterns.filter((pattern) => utils$a.pattern.isStaticPattern(pattern, settings));
     const dynamicPatterns = positivePatterns.filter((pattern) => utils$a.pattern.isDynamicPattern(pattern, settings));
     const staticTasks = convertPatternsToTasks(staticPatterns, negativePatterns, /* dynamic */ false);
@@ -19264,6 +19428,34 @@ function generate(patterns, settings) {
     return staticTasks.concat(dynamicTasks);
 }
 tasks.generate = generate;
+function processPatterns(input, settings) {
+    let patterns = input;
+    /**
+     * The original pattern like `{,*,**,a/*}` can lead to problems checking the depth when matching entry
+     * and some problems with the micromatch package (see fast-glob issues: #365, #394).
+     *
+     * To solve this problem, we expand all patterns containing brace expansion. This can lead to a slight slowdown
+     * in matching in the case of a large set of patterns after expansion.
+     */
+    if (settings.braceExpansion) {
+        patterns = utils$a.pattern.expandPatternsWithBraceExpansion(patterns);
+    }
+    /**
+     * If the `baseNameMatch` option is enabled, we must add globstar to patterns, so that they can be used
+     * at any nesting level.
+     *
+     * We do this here, because otherwise we have to complicate the filtering logic. For example, we need to change
+     * the pattern in the filter before creating a regular expression. There is no need to change the patterns
+     * in the application. Only on the input.
+     */
+    if (settings.baseNameMatch) {
+        patterns = patterns.map((pattern) => pattern.includes('/') ? pattern : `**/${pattern}`);
+    }
+    /**
+     * This method also removes duplicate slashes that may have been in the pattern or formed as a result of expansion.
+     */
+    return patterns.map((pattern) => utils$a.pattern.removeDuplicateSlashes(pattern));
+}
 /**
  * Returns tasks grouped by basic pattern directories.
  *
@@ -19330,29 +19522,6 @@ function convertPatternGroupToTask(base, positive, negative, dynamic) {
     };
 }
 tasks.convertPatternGroupToTask = convertPatternGroupToTask;
-
-var patterns = {};
-
-Object.defineProperty(patterns, "__esModule", { value: true });
-patterns.removeDuplicateSlashes = patterns.transform = void 0;
-/**
- * Matches a sequence of two or more consecutive slashes, excluding the first two slashes at the beginning of the string.
- * The latter is due to the presence of the device path at the beginning of the UNC path.
- * @todo rewrite to negative lookbehind with the next major release.
- */
-const DOUBLE_SLASH_RE$1 = /(?!^)\/{2,}/g;
-function transform(patterns) {
-    return patterns.map((pattern) => removeDuplicateSlashes(pattern));
-}
-patterns.transform = transform;
-/**
- * This package only works with forward slashes as a path separator.
- * Because of this, we cannot use the standard `path.normalize` method, because on Windows platform it will use of backslashes.
- */
-function removeDuplicateSlashes(pattern) {
-    return pattern.replace(DOUBLE_SLASH_RE$1, '/');
-}
-patterns.removeDuplicateSlashes = removeDuplicateSlashes;
 
 var async$7 = {};
 
@@ -19916,8 +20085,8 @@ function fastqueue (context, worker, concurrency) {
 
   var self = {
     push: push,
-    drain: noop$3,
-    saturated: noop$3,
+    drain: noop$4,
+    saturated: noop$4,
     pause: pause,
     paused: false,
     concurrency: concurrency,
@@ -19927,7 +20096,7 @@ function fastqueue (context, worker, concurrency) {
     length: length,
     getQueue: getQueue,
     unshift: unshift,
-    empty: noop$3,
+    empty: noop$4,
     kill: kill,
     killAndDrain: killAndDrain,
     error: error
@@ -19986,7 +20155,7 @@ function fastqueue (context, worker, concurrency) {
     current.context = context;
     current.release = release;
     current.value = value;
-    current.callback = done || noop$3;
+    current.callback = done || noop$4;
     current.errorHandler = errorHandler;
 
     if (_running === self.concurrency || self.paused) {
@@ -20010,7 +20179,7 @@ function fastqueue (context, worker, concurrency) {
     current.context = context;
     current.release = release;
     current.value = value;
-    current.callback = done || noop$3;
+    current.callback = done || noop$4;
 
     if (_running === self.concurrency || self.paused) {
       if (queueHead) {
@@ -20054,14 +20223,14 @@ function fastqueue (context, worker, concurrency) {
   function kill () {
     queueHead = null;
     queueTail = null;
-    self.drain = noop$3;
+    self.drain = noop$4;
   }
 
   function killAndDrain () {
     queueHead = null;
     queueTail = null;
     self.drain();
-    self.drain = noop$3;
+    self.drain = noop$4;
   }
 
   function error (handler) {
@@ -20069,13 +20238,13 @@ function fastqueue (context, worker, concurrency) {
   }
 }
 
-function noop$3 () {}
+function noop$4 () {}
 
 function Task () {
   this.value = null;
-  this.callback = noop$3;
+  this.callback = noop$4;
   this.next = null;
-  this.release = noop$3;
+  this.release = noop$4;
   this.context = null;
   this.errorHandler = null;
 
@@ -20086,7 +20255,7 @@ function Task () {
     var errorHandler = self.errorHandler;
     var val = self.value;
     self.value = null;
-    self.callback = noop$3;
+    self.callback = noop$4;
     if (self.errorHandler) {
       errorHandler(err, val);
     }
@@ -20134,7 +20303,7 @@ function queueAsPromised (context, worker, concurrency) {
     // Let's fork the promise chain to
     // make the error bubble up to the user but
     // not lead to a unhandledRejection
-    p.catch(noop$3);
+    p.catch(noop$4);
 
     return p
   }
@@ -20153,7 +20322,7 @@ function queueAsPromised (context, worker, concurrency) {
     // Let's fork the promise chain to
     // make the error bubble up to the user but
     // not lead to a unhandledRejection
-    p.catch(noop$3);
+    p.catch(noop$4);
 
     return p
   }
@@ -20671,12 +20840,7 @@ class Matcher {
         this._fillStorage();
     }
     _fillStorage() {
-        /**
-         * The original pattern may include `{,*,**,a/*}`, which will lead to problems with matching (unresolved level).
-         * So, before expand patterns with brace expansion into separated patterns.
-         */
-        const patterns = utils$5.pattern.expandPatternsWithBraceExpansion(this._patterns);
-        for (const pattern of patterns) {
+        for (const pattern of this._patterns) {
             const segments = this._getPatternSegments(pattern);
             const sections = this._splitSegmentsIntoSections(segments);
             this._storage.push({
@@ -20822,32 +20986,32 @@ class EntryFilter {
     }
     getFilter(positive, negative) {
         const positiveRe = utils$3.pattern.convertPatternsToRe(positive, this._micromatchOptions);
-        const negativeRe = utils$3.pattern.convertPatternsToRe(negative, this._micromatchOptions);
+        const negativeRe = utils$3.pattern.convertPatternsToRe(negative, Object.assign(Object.assign({}, this._micromatchOptions), { dot: true }));
         return (entry) => this._filter(entry, positiveRe, negativeRe);
     }
     _filter(entry, positiveRe, negativeRe) {
-        if (this._settings.unique && this._isDuplicateEntry(entry)) {
+        const filepath = utils$3.path.removeLeadingDotSegment(entry.path);
+        if (this._settings.unique && this._isDuplicateEntry(filepath)) {
             return false;
         }
         if (this._onlyFileFilter(entry) || this._onlyDirectoryFilter(entry)) {
             return false;
         }
-        if (this._isSkippedByAbsoluteNegativePatterns(entry.path, negativeRe)) {
+        if (this._isSkippedByAbsoluteNegativePatterns(filepath, negativeRe)) {
             return false;
         }
-        const filepath = this._settings.baseNameMatch ? entry.name : entry.path;
         const isDirectory = entry.dirent.isDirectory();
-        const isMatched = this._isMatchToPatterns(filepath, positiveRe, isDirectory) && !this._isMatchToPatterns(entry.path, negativeRe, isDirectory);
+        const isMatched = this._isMatchToPatterns(filepath, positiveRe, isDirectory) && !this._isMatchToPatterns(filepath, negativeRe, isDirectory);
         if (this._settings.unique && isMatched) {
-            this._createIndexRecord(entry);
+            this._createIndexRecord(filepath);
         }
         return isMatched;
     }
-    _isDuplicateEntry(entry) {
-        return this.index.has(entry.path);
+    _isDuplicateEntry(filepath) {
+        return this.index.has(filepath);
     }
-    _createIndexRecord(entry) {
-        this.index.set(entry.path, undefined);
+    _createIndexRecord(filepath) {
+        this.index.set(filepath, undefined);
     }
     _onlyFileFilter(entry) {
         return this._settings.onlyFiles && !entry.dirent.isFile();
@@ -20862,8 +21026,7 @@ class EntryFilter {
         const fullpath = utils$3.path.makeAbsolute(this._settings.cwd, entryPath);
         return utils$3.pattern.matchAny(fullpath, patternsRe);
     }
-    _isMatchToPatterns(entryPath, patternsRe, isDirectory) {
-        const filepath = utils$3.path.removeLeadingDotSegment(entryPath);
+    _isMatchToPatterns(filepath, patternsRe, isDirectory) {
         // Trying to match files and directories by patterns.
         const isMatched = utils$3.pattern.matchAny(filepath, patternsRe);
         // A pattern with a trailling slash can be used for directory matching.
@@ -21157,7 +21320,6 @@ var settings = {};
 } (settings));
 
 const taskManager = tasks;
-const patternManager = patterns;
 const async_1 = async$7;
 const stream_1 = stream;
 const sync_1 = sync$2;
@@ -21172,6 +21334,10 @@ async function FastGlob(source, options) {
 // https://github.com/typescript-eslint/typescript-eslint/issues/60
 // eslint-disable-next-line no-redeclare
 (function (FastGlob) {
+    FastGlob.glob = FastGlob;
+    FastGlob.globSync = sync;
+    FastGlob.globStream = stream;
+    FastGlob.async = FastGlob;
     function sync(source, options) {
         assertPatternsInput(source);
         const works = getWorks(source, sync_1.default, options);
@@ -21191,7 +21357,7 @@ async function FastGlob(source, options) {
     FastGlob.stream = stream;
     function generateTasks(source, options) {
         assertPatternsInput(source);
-        const patterns = patternManager.transform([].concat(source));
+        const patterns = [].concat(source);
         const settings = new settings_1.default(options);
         return taskManager.generate(patterns, settings);
     }
@@ -21207,9 +21373,38 @@ async function FastGlob(source, options) {
         return utils.path.escape(source);
     }
     FastGlob.escapePath = escapePath;
+    function convertPathToPattern(source) {
+        assertPatternsInput(source);
+        return utils.path.convertPathToPattern(source);
+    }
+    FastGlob.convertPathToPattern = convertPathToPattern;
+    (function (posix) {
+        function escapePath(source) {
+            assertPatternsInput(source);
+            return utils.path.escapePosixPath(source);
+        }
+        posix.escapePath = escapePath;
+        function convertPathToPattern(source) {
+            assertPatternsInput(source);
+            return utils.path.convertPosixPathToPattern(source);
+        }
+        posix.convertPathToPattern = convertPathToPattern;
+    })(FastGlob.posix || (FastGlob.posix = {}));
+    (function (win32) {
+        function escapePath(source) {
+            assertPatternsInput(source);
+            return utils.path.escapeWindowsPath(source);
+        }
+        win32.escapePath = escapePath;
+        function convertPathToPattern(source) {
+            assertPatternsInput(source);
+            return utils.path.convertWindowsPathToPattern(source);
+        }
+        win32.convertPathToPattern = convertPathToPattern;
+    })(FastGlob.win32 || (FastGlob.win32 = {}));
 })(FastGlob || (FastGlob = {}));
 function getWorks(source, _Provider, options) {
-    const patterns = patternManager.transform([].concat(source));
+    const patterns = [].concat(source);
     const settings = new settings_1.default(options);
     const tasks = taskManager.generate(patterns, settings);
     const provider = new _Provider(settings);
@@ -27240,6 +27435,7 @@ function stringifyQuery(query) {
   return Object.keys(query).filter((k) => query[k] !== void 0).map((k) => encodeQueryItem(k, query[k])).join("&");
 }
 
+new Set(builtinModules);
 function matchAll(regex, string, addition) {
   const matches = [];
   for (const match of string.matchAll(regex)) {
@@ -27252,6 +27448,18 @@ function matchAll(regex, string, addition) {
     });
   }
   return matches;
+}
+function clearImports(imports) {
+  return (imports || "").replace(/(\/\/[^\n]*\n|\/\*.*\*\/)/g, "").replace(/\s+/g, " ");
+}
+function getImportNames(cleanedImports) {
+  const topLevelImports = cleanedImports.replace(/{([^}]*)}/, "");
+  const namespacedImport = topLevelImports.match(/\* as \s*(\S*)/)?.[1];
+  const defaultImport = topLevelImports.split(",").find((index) => !/[*{}]/.test(index))?.trim() || void 0;
+  return {
+    namespacedImport,
+    defaultImport
+  };
 }
 
 /**
@@ -27764,13 +27972,13 @@ function determineSpecificType(value) {
 }
 pathToFileURL(process.cwd());
 
-const ESM_STATIC_IMPORT_RE = /(?<=\s|^|;)import\s*([\s"']*(?<imports>[\p{L}\p{M}\w\t\n\r $*,/{}]+)from\s*)?["']\s*(?<specifier>(?<="\s*)[^"]*[^\s"](?=\s*")|(?<='\s*)[^']*[^\s'](?=\s*'))\s*["'][\s;]*/gmu;
+const ESM_STATIC_IMPORT_RE = /(?<=\s|^|;)import\s*([\s"']*(?<imports>[\p{L}\p{M}\w\t\n\r $*,/{}@.]+)from\s*)?["']\s*(?<specifier>(?<="\s*)[^"]*[^\s"](?=\s*")|(?<='\s*)[^']*[^\s'](?=\s*'))\s*["'][\s;]*/gmu;
 const TYPE_RE = /^\s*?type\s/;
 function findStaticImports(code) {
   return matchAll(ESM_STATIC_IMPORT_RE, code, { type: "static" });
 }
 function parseStaticImport(matched) {
-  const cleanedImports = (matched.imports || "").replace(/(\/\/[^\n]*\n|\/\*.*\*\/)/g, "").replace(/\s+/g, " ");
+  const cleanedImports = clearImports(matched.imports);
   const namedImports = {};
   for (const namedImport of cleanedImports.match(/{([^}]*)}/)?.[1]?.split(",") || []) {
     const [, source = namedImport.trim(), importName = source] = namedImport.match(/^\s*(\S*) as (\S*)\s*$/) || [];
@@ -27778,9 +27986,7 @@ function parseStaticImport(matched) {
       namedImports[source] = importName;
     }
   }
-  const topLevelImports = cleanedImports.replace(/{([^}]*)}/, "");
-  const namespacedImport = topLevelImports.match(/\* as \s*(\S*)/)?.[1];
-  const defaultImport = topLevelImports.split(",").find((index) => !/[*{}]/.test(index))?.trim() || void 0;
+  const { namespacedImport, defaultImport } = getImportNames(cleanedImports);
   return {
     ...matched,
     defaultImport,
@@ -36059,6 +36265,7 @@ var YAML = {
 };
 
 // `export * as default from ...` fails on Webpack v4
+// https://github.com/eemeli/yaml/issues/228
 
 var browser$2 = {
 	__proto__: null,
@@ -37104,7 +37311,7 @@ function htmlInlineProxyPlugin(config) {
                 const index = Number(proxyMatch[1]);
                 const file = cleanUrl(id);
                 const url = file.replace(normalizePath$3(config.root), '');
-                const result = htmlProxyMap.get(config).get(url)[index];
+                const result = htmlProxyMap.get(config).get(url)?.[index];
                 if (result) {
                     return result;
                 }
@@ -37475,6 +37682,7 @@ function buildHtmlPlugin(config) {
         },
         async generateBundle(options, bundle) {
             const analyzedChunk = new Map();
+            const inlineEntryChunk = new Set();
             const getImportedChunks = (chunk, seen = new Set()) => {
                 const chunks = [];
                 chunk.imports.forEach((file) => {
@@ -37629,8 +37837,7 @@ function buildHtmlPlugin(config) {
                         : normalizePath$3(publicAssetPath);
                 });
                 if (chunk && canInlineEntry) {
-                    // all imports from entry have been inlined to html, prevent rollup from outputting it
-                    delete bundle[chunk.fileName];
+                    inlineEntryChunk.add(chunk.fileName);
                 }
                 const shortEmitName = normalizePath$3(path$o.relative(config.root, id));
                 this.emitFile({
@@ -37638,6 +37845,10 @@ function buildHtmlPlugin(config) {
                     fileName: shortEmitName,
                     source: result,
                 });
+            }
+            for (const fileName of inlineEntryChunk) {
+                // all imports from entry have been inlined to html, prevent rollup from outputting it
+                delete bundle[fileName];
             }
         },
     };
@@ -38097,7 +38308,7 @@ function cssPostPlugin(config) {
                 const getContentWithSourcemap = async (content) => {
                     if (config.css?.devSourcemap) {
                         const sourcemap = this.getCombinedSourcemap();
-                        if (sourcemap.mappings && !sourcemap.sourcesContent) {
+                        if (sourcemap.mappings) {
                             await injectSourcesContent(sourcemap, cleanUrl(id), config.logger);
                         }
                         return getCodeWithSourcemap('css', content, sourcemap);
@@ -38663,8 +38874,8 @@ function createCachedImport(imp) {
         return cached;
     };
 }
-const importPostcssImport = createCachedImport(() => import('./dep-5b416cd2.js').then(function (n) { return n.i; }));
-const importPostcssModules = createCachedImport(() => import('./dep-cc99f86e.js').then(function (n) { return n.i; }));
+const importPostcssImport = createCachedImport(() => import('./dep-f8c9a3c4.js').then(function (n) { return n.i; }));
+const importPostcssModules = createCachedImport(() => import('./dep-881c5d3c.js').then(function (n) { return n.i; }));
 const importPostcss = createCachedImport(() => import('postcss'));
 /**
  * @experimental
@@ -38833,6 +39044,12 @@ async function rewriteCssImageSet(css, replacer) {
         return url;
     });
 }
+function skipUrlReplacer(rawUrl) {
+    return (isExternalUrl(rawUrl) ||
+        isDataUrl(rawUrl) ||
+        rawUrl[0] === '#' ||
+        varRE.test(rawUrl));
+}
 async function doUrlReplace(rawUrl, matched, replacer, funcName = 'url') {
     let wrap = '';
     const first = rawUrl[0];
@@ -38840,10 +39057,7 @@ async function doUrlReplace(rawUrl, matched, replacer, funcName = 'url') {
         wrap = first;
         rawUrl = rawUrl.slice(1, -1);
     }
-    if (isExternalUrl(rawUrl) ||
-        isDataUrl(rawUrl) ||
-        rawUrl[0] === '#' ||
-        varRE.test(rawUrl)) {
+    if (skipUrlReplacer(rawUrl)) {
         return matched;
     }
     const newUrl = await replacer(rawUrl);
@@ -38883,7 +39097,7 @@ async function minifyCSS(css, config) {
         return code.toString();
     }
     try {
-        const { code, warnings } = await transform$2(css, {
+        const { code, warnings } = await transform$1(css, {
             loader: 'css',
             target: config.build.cssTarget || undefined,
             ...resolveMinifyCssEsbuildOptions(config.esbuild || {}),
@@ -38910,6 +39124,7 @@ function resolveMinifyCssEsbuildOptions(options) {
         logLevel: options.logLevel,
         logLimit: options.logLimit,
         logOverride: options.logOverride,
+        legalComments: options.legalComments,
     };
     if (options.minifyIdentifiers != null ||
         options.minifySyntax != null ||
@@ -39356,6 +39571,10 @@ async function compileLightningCSS(id, src, config, urlReplacer) {
     for (const dep of res.dependencies) {
         switch (dep.type) {
             case 'url':
+                if (skipUrlReplacer(dep.url)) {
+                    css = css.replace(dep.placeholder, dep.url);
+                    break;
+                }
                 deps.add(dep.url);
                 if (urlReplacer) {
                     css = css.replace(dep.placeholder, await urlReplacer(dep.url, id));
@@ -40171,6 +40390,7 @@ function throwOutdatedRequest(id) {
 
 // AST walker module for Mozilla Parser API compatible trees
 
+
 function makeTest(test) {
   if (typeof test === "string")
     { return function (type) { return type === test; } }
@@ -40767,18 +40987,13 @@ async function transformGlobImport(code, id, root, resolveId, isProduction, rest
                 if (!isProduction && isCSS) {
                     // https://github.com/vitejs/vite/issues/12001
                     objectProps.push(`get ${JSON.stringify(filePath)}() {
-                      const value = ${variableName}.default
-                      const mod = Object.create(${variableName})
-                      if (Reflect.toString.call(mod) !== '[object Module]') {
-                        mod[Symbol.toStringTag] = 'Module'
-                      }
-                      Object.defineProperty(mod, 'default', {
-                        get() {
+                      return {
+                        get default() {
                           ${createCssDefaultImportWarning(globs, options)}
-                          return value
-                        }
-                      })
-                      return mod
+                          return ${variableName}.default
+                        },
+                        [Symbol.toStringTag]: 'Module'
+                      }
                   }`);
                 }
                 else {
@@ -40794,18 +41009,13 @@ async function transformGlobImport(code, id, root, resolveId, isProduction, rest
                     // there is filter module css (isCSS => !isModuleCSSRequest), so just handle default now
                     objectProps.push(`${JSON.stringify(filePath)}: () => {
                       return ${importStatement}.then(m => {
-                        const value = m.default
-                        const mod = Object.create(m)
-                        if (Reflect.toString.call(m) !== '[object Module]') {
-                          mod[Symbol.toStringTag] = 'Module'
-                        }
-                        Object.defineProperty(mod, 'default', {
-                          get() {
+                        return {
+                          get default() {
                             ${createCssDefaultImportWarning(globs, options)}
-                            return value
-                          }
-                        })
-                        return mod
+                            return m.default
+                          },
+                          [Symbol.toStringTag]: 'Module'
+                        }
                       })
                     }`);
                 }
@@ -41002,12 +41212,12 @@ function updateModules(file, modules, timestamp, { config, ws, moduleGraph }, af
     const traversedModules = new Set();
     let needFullReload = false;
     for (const mod of modules) {
-        moduleGraph.invalidateModule(mod, invalidatedModules, timestamp, true);
+        const boundaries = [];
+        const hasDeadEnd = propagateUpdate(mod, traversedModules, boundaries);
+        moduleGraph.invalidateModule(mod, invalidatedModules, timestamp, true, boundaries.map((b) => b.boundary));
         if (needFullReload) {
             continue;
         }
-        const boundaries = [];
-        const hasDeadEnd = propagateUpdate(mod, traversedModules, boundaries);
         if (hasDeadEnd) {
             needFullReload = true;
             continue;
@@ -43402,7 +43612,7 @@ function prepareError(err) {
         id: err.id,
         frame: stripAnsi(err.frame || ''),
         plugin: err.plugin,
-        pluginCode: err.pluginCode,
+        pluginCode: err.pluginCode?.toString(),
         loc: err.loc,
     };
 }
@@ -43471,6 +43681,32 @@ function errorMiddleware(server, allowNext = false) {
  * This file is refactored into TypeScript based on
  * https://github.com/preactjs/wmr/blob/main/packages/wmr/src/lib/rollup-plugin-container.js
  */
+/**
+https://github.com/preactjs/wmr/blob/master/LICENSE
+
+MIT License
+
+Copyright (c) 2020 The Preact Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+const noop$3 = () => { };
 const ERR_CLOSED_SERVER = 'ERR_CLOSED_SERVER';
 function throwClosedServerError() {
     const err = new Error('The server is being restarted or closed. Request is outdated');
@@ -43502,6 +43738,11 @@ async function createPluginContainer(config, moduleGraph, watcher) {
             rollupVersion: VERSION,
             watchMode: true,
         },
+        debug: noop$3,
+        info: noop$3,
+        warn: noop$3,
+        // @ts-expect-error noop
+        error: noop$3,
     };
     function warnIncompatibleMethod(method, plugin) {
         logger.warn(colors$1.cyan(`[plugin:${plugin}] `) +
@@ -43574,6 +43815,8 @@ async function createPluginContainer(config, moduleGraph, watcher) {
             this._activeId = null;
             this._activeCode = null;
             this._addedImports = null;
+            this.debug = noop$3;
+            this.info = noop$3;
             this._activePlugin = initialPlugin || null;
         }
         parse(code, opts = {}) {
@@ -43646,7 +43889,7 @@ async function createPluginContainer(config, moduleGraph, watcher) {
             return '';
         }
         warn(e, position) {
-            const err = formatError(e, position, this);
+            const err = formatError(typeof e === 'function' ? e() : e, position, this);
             const msg = buildErrorMessage(err, [colors$1.yellow(`warning: ${err.message}`)], false);
             logger.warn(msg, {
                 clear: true,
@@ -43743,7 +43986,7 @@ async function createPluginContainer(config, moduleGraph, watcher) {
                     }
                 }
                 if (code) {
-                    err.frame = generateCodeFrame(code, err.loc);
+                    err.frame = generateCodeFrame(`${code}`, err.loc);
                 }
             }
         }
@@ -44202,7 +44445,7 @@ function esbuildScanPlugin(config, container, depImports, missing, entries) {
         let transpiledContents;
         // transpile because `transformGlobImport` only expects js
         if (loader !== 'js') {
-            transpiledContents = (await transform$2(contents, { loader })).code;
+            transpiledContents = (await transform$1(contents, { loader })).code;
         }
         else {
             transpiledContents = contents;
@@ -46112,7 +46355,7 @@ function indexOfMatchInSlice(str, reg, pos = 0) {
  * the async chunk itself.
  */
 function detectScriptRel() {
-    const relList = document.createElement('link').relList;
+    const relList = typeof document !== 'undefined' && document.createElement('link').relList;
     return relList && relList.supports && relList.supports('modulepreload')
         ? 'modulepreload'
         : 'preload';
@@ -46409,7 +46652,16 @@ function buildImportAnalysisPlugin(config) {
                         imports = parse$e(code)[0].filter((i) => i.d > -1);
                     }
                     catch (e) {
-                        this.error(e, e.idx);
+                        const loc = numberToPos(code, e.idx);
+                        this.error({
+                            name: e.name,
+                            message: e.message,
+                            stack: e.stack,
+                            cause: e.cause,
+                            pos: e.idx,
+                            loc: { ...loc, file: chunk.fileName },
+                            frame: generateCodeFrame(code, loc),
+                        });
                     }
                     const s = new MagicString(code);
                     const rewroteMarkerStartPos = new Set(); // position of the leading double quote
@@ -46537,7 +46789,10 @@ function buildImportAnalysisPlugin(config) {
                                 source: chunk.fileName,
                                 hires: true,
                             });
-                            const map = combineSourcemaps(chunk.fileName, [nextMap, chunk.map], false);
+                            const map = combineSourcemaps(chunk.fileName, [
+                                nextMap,
+                                chunk.map,
+                            ]);
                             map.toUrl = () => genSourceMapUrl(map);
                             chunk.map = map;
                             if (config.build.sourcemap === 'inline') {
@@ -46591,7 +46846,16 @@ function ssrManifestPlugin(config) {
                             imports = parse$e(code)[0].filter((i) => i.n && i.d > -1);
                         }
                         catch (e) {
-                            this.error(e, e.idx);
+                            const loc = numberToPos(code, e.idx);
+                            this.error({
+                                name: e.name,
+                                message: e.message,
+                                stack: e.stack,
+                                cause: e.cause,
+                                pos: e.idx,
+                                loc: { ...loc, file: chunk.fileName },
+                                frame: generateCodeFrame(code, loc),
+                            });
                         }
                         if (imports.length) {
                             for (let index = 0; index < imports.length; index++) {
@@ -47753,31 +48017,42 @@ const dynamicImportWarningIgnoreList = [
     `statically analyzed`,
 ];
 function onRollupWarning(warning, warn, config) {
-    function viteWarn(warning) {
-        if (warning.code === 'UNRESOLVED_IMPORT') {
-            const id = warning.id;
-            const exporter = warning.exporter;
-            // throw unless it's commonjs external...
-            if (!id || !/\?commonjs-external$/.test(id)) {
-                throw new Error(`[vite]: Rollup failed to resolve import "${exporter}" from "${id}".\n` +
-                    `This is most likely unintended because it can break your application at runtime.\n` +
-                    `If you do want to externalize this module explicitly add it to\n` +
-                    `\`build.rollupOptions.external\``);
+    const viteWarn = (warnLog) => {
+        let warning;
+        if (typeof warnLog === 'function') {
+            warning = warnLog();
+        }
+        else {
+            warning = warnLog;
+        }
+        if (typeof warning === 'object') {
+            if (warning.code === 'UNRESOLVED_IMPORT') {
+                const id = warning.id;
+                const exporter = warning.exporter;
+                // throw unless it's commonjs external...
+                if (!id || !/\?commonjs-external$/.test(id)) {
+                    throw new Error(`[vite]: Rollup failed to resolve import "${exporter}" from "${id}".\n` +
+                        `This is most likely unintended because it can break your application at runtime.\n` +
+                        `If you do want to externalize this module explicitly add it to\n` +
+                        `\`build.rollupOptions.external\``);
+                }
+            }
+            if (warning.plugin === 'rollup-plugin-dynamic-import-variables' &&
+                dynamicImportWarningIgnoreList.some((msg) => 
+                // @ts-expect-error warning is RollupLog
+                warning.message.includes(msg))) {
+                return;
+            }
+            if (warningIgnoreList.includes(warning.code)) {
+                return;
+            }
+            if (warning.code === 'PLUGIN_WARNING') {
+                config.logger.warn(`${colors$1.bold(colors$1.yellow(`[plugin:${warning.plugin}]`))} ${colors$1.yellow(warning.message)}`);
+                return;
             }
         }
-        if (warning.plugin === 'rollup-plugin-dynamic-import-variables' &&
-            dynamicImportWarningIgnoreList.some((msg) => warning.message.includes(msg))) {
-            return;
-        }
-        if (warningIgnoreList.includes(warning.code)) {
-            return;
-        }
-        if (warning.code === 'PLUGIN_WARNING') {
-            config.logger.warn(`${colors$1.bold(colors$1.yellow(`[plugin:${warning.plugin}]`))} ${colors$1.yellow(warning.message)}`);
-            return;
-        }
-        warn(warning);
-    }
+        warn(warnLog);
+    };
     const tty = process.stdout.isTTY && !process.env.CI;
     if (tty) {
         process.stdout.clearLine(0);
@@ -54573,7 +54848,7 @@ async function loadAndTransform(id, url, server, options, timestamp, mod, resolv
     }
     if (map && mod.file) {
         map = (typeof map === 'string' ? JSON.parse(map) : map);
-        if (map.mappings && !map.sourcesContent) {
+        if (map.mappings) {
             await injectSourcesContent(map, mod.file, logger);
         }
         const sourcemapPath = `${mod.file}.map`;
@@ -55092,7 +55367,9 @@ async function ssrTransformScript(code, inMap, url, originalCode) {
                     s.prependRight(topNode.start, `const ${id.name} = ${binding};\n`);
                 }
             }
-            else if (parent.type !== 'ClassExpression') {
+            else if (
+            // don't transform class name identifier
+            !(parent.type === 'ClassExpression' && id === parent.id)) {
                 s.update(id.start, id.end, binding);
             }
         },
@@ -55115,7 +55392,7 @@ async function ssrTransformScript(code, inMap, url, originalCode) {
                 sourcesContent: inMap.sourcesContent,
             },
             inMap,
-        ], false);
+        ]);
     }
     else {
         map.sources = [path$o.basename(url)];
@@ -55650,25 +55927,1200 @@ function isPrimitive(value) {
     return !value || (typeof value !== 'object' && typeof value !== 'function');
 }
 
+var isWsl$2 = {exports: {}};
+
+const fs$3 = require$$0__default;
+
+let isDocker$2;
+
+function hasDockerEnv() {
+	try {
+		fs$3.statSync('/.dockerenv');
+		return true;
+	} catch (_) {
+		return false;
+	}
+}
+
+function hasDockerCGroup() {
+	try {
+		return fs$3.readFileSync('/proc/self/cgroup', 'utf8').includes('docker');
+	} catch (_) {
+		return false;
+	}
+}
+
+var isDocker_1 = () => {
+	if (isDocker$2 === undefined) {
+		isDocker$2 = hasDockerEnv() || hasDockerCGroup();
+	}
+
+	return isDocker$2;
+};
+
+const os = require$$2;
+const fs$2 = require$$0__default;
+const isDocker$1 = isDocker_1;
+
+const isWsl$1 = () => {
+	if (process.platform !== 'linux') {
+		return false;
+	}
+
+	if (os.release().toLowerCase().includes('microsoft')) {
+		if (isDocker$1()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	try {
+		return fs$2.readFileSync('/proc/version', 'utf8').toLowerCase().includes('microsoft') ?
+			!isDocker$1() : false;
+	} catch (_) {
+		return false;
+	}
+};
+
+if (process.env.__IS_WSL_TEST__) {
+	isWsl$2.exports = isWsl$1;
+} else {
+	isWsl$2.exports = isWsl$1();
+}
+
+var isWslExports = isWsl$2.exports;
+
+var defineLazyProp = (object, propertyName, fn) => {
+	const define = value => Object.defineProperty(object, propertyName, {value, enumerable: true, writable: true});
+
+	Object.defineProperty(object, propertyName, {
+		configurable: true,
+		enumerable: true,
+		get() {
+			const result = fn();
+			define(result);
+			return result;
+		},
+		set(value) {
+			define(value);
+		}
+	});
+
+	return object;
+};
+
+const path$3 = require$$0$4;
+const childProcess = require$$2$1;
+const {promises: fs$1, constants: fsConstants} = require$$0__default;
+const isWsl = isWslExports;
+const isDocker = isDocker_1;
+const defineLazyProperty = defineLazyProp;
+
+// Path to included `xdg-open`.
+const localXdgOpenPath = path$3.join(__dirname, 'xdg-open');
+
+const {platform, arch} = process;
+
+// Podman detection
+const hasContainerEnv = () => {
+	try {
+		fs$1.statSync('/run/.containerenv');
+		return true;
+	} catch {
+		return false;
+	}
+};
+
+let cachedResult;
+function isInsideContainer() {
+	if (cachedResult === undefined) {
+		cachedResult = hasContainerEnv() || isDocker();
+	}
+
+	return cachedResult;
+}
+
+/**
+Get the mount point for fixed drives in WSL.
+
+@inner
+@returns {string} The mount point.
+*/
+const getWslDrivesMountPoint = (() => {
+	// Default value for "root" param
+	// according to https://docs.microsoft.com/en-us/windows/wsl/wsl-config
+	const defaultMountPoint = '/mnt/';
+
+	let mountPoint;
+
+	return async function () {
+		if (mountPoint) {
+			// Return memoized mount point value
+			return mountPoint;
+		}
+
+		const configFilePath = '/etc/wsl.conf';
+
+		let isConfigFileExists = false;
+		try {
+			await fs$1.access(configFilePath, fsConstants.F_OK);
+			isConfigFileExists = true;
+		} catch {}
+
+		if (!isConfigFileExists) {
+			return defaultMountPoint;
+		}
+
+		const configContent = await fs$1.readFile(configFilePath, {encoding: 'utf8'});
+		const configMountPoint = /(?<!#.*)root\s*=\s*(?<mountPoint>.*)/g.exec(configContent);
+
+		if (!configMountPoint) {
+			return defaultMountPoint;
+		}
+
+		mountPoint = configMountPoint.groups.mountPoint.trim();
+		mountPoint = mountPoint.endsWith('/') ? mountPoint : `${mountPoint}/`;
+
+		return mountPoint;
+	};
+})();
+
+const pTryEach = async (array, mapper) => {
+	let latestError;
+
+	for (const item of array) {
+		try {
+			return await mapper(item); // eslint-disable-line no-await-in-loop
+		} catch (error) {
+			latestError = error;
+		}
+	}
+
+	throw latestError;
+};
+
+const baseOpen = async options => {
+	options = {
+		wait: false,
+		background: false,
+		newInstance: false,
+		allowNonzeroExitCode: false,
+		...options
+	};
+
+	if (Array.isArray(options.app)) {
+		return pTryEach(options.app, singleApp => baseOpen({
+			...options,
+			app: singleApp
+		}));
+	}
+
+	let {name: app, arguments: appArguments = []} = options.app || {};
+	appArguments = [...appArguments];
+
+	if (Array.isArray(app)) {
+		return pTryEach(app, appName => baseOpen({
+			...options,
+			app: {
+				name: appName,
+				arguments: appArguments
+			}
+		}));
+	}
+
+	let command;
+	const cliArguments = [];
+	const childProcessOptions = {};
+
+	if (platform === 'darwin') {
+		command = 'open';
+
+		if (options.wait) {
+			cliArguments.push('--wait-apps');
+		}
+
+		if (options.background) {
+			cliArguments.push('--background');
+		}
+
+		if (options.newInstance) {
+			cliArguments.push('--new');
+		}
+
+		if (app) {
+			cliArguments.push('-a', app);
+		}
+	} else if (platform === 'win32' || (isWsl && !isInsideContainer() && !app)) {
+		const mountPoint = await getWslDrivesMountPoint();
+
+		command = isWsl ?
+			`${mountPoint}c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe` :
+			`${process.env.SYSTEMROOT}\\System32\\WindowsPowerShell\\v1.0\\powershell`;
+
+		cliArguments.push(
+			'-NoProfile',
+			'-NonInteractive',
+			'–ExecutionPolicy',
+			'Bypass',
+			'-EncodedCommand'
+		);
+
+		if (!isWsl) {
+			childProcessOptions.windowsVerbatimArguments = true;
+		}
+
+		const encodedArguments = ['Start'];
+
+		if (options.wait) {
+			encodedArguments.push('-Wait');
+		}
+
+		if (app) {
+			// Double quote with double quotes to ensure the inner quotes are passed through.
+			// Inner quotes are delimited for PowerShell interpretation with backticks.
+			encodedArguments.push(`"\`"${app}\`""`, '-ArgumentList');
+			if (options.target) {
+				appArguments.unshift(options.target);
+			}
+		} else if (options.target) {
+			encodedArguments.push(`"${options.target}"`);
+		}
+
+		if (appArguments.length > 0) {
+			appArguments = appArguments.map(arg => `"\`"${arg}\`""`);
+			encodedArguments.push(appArguments.join(','));
+		}
+
+		// Using Base64-encoded command, accepted by PowerShell, to allow special characters.
+		options.target = Buffer.from(encodedArguments.join(' '), 'utf16le').toString('base64');
+	} else {
+		if (app) {
+			command = app;
+		} else {
+			// When bundled by Webpack, there's no actual package file path and no local `xdg-open`.
+			const isBundled = !__dirname || __dirname === '/';
+
+			// Check if local `xdg-open` exists and is executable.
+			let exeLocalXdgOpen = false;
+			try {
+				await fs$1.access(localXdgOpenPath, fsConstants.X_OK);
+				exeLocalXdgOpen = true;
+			} catch {}
+
+			const useSystemXdgOpen = process.versions.electron ||
+				platform === 'android' || isBundled || !exeLocalXdgOpen;
+			command = useSystemXdgOpen ? 'xdg-open' : localXdgOpenPath;
+		}
+
+		if (appArguments.length > 0) {
+			cliArguments.push(...appArguments);
+		}
+
+		if (!options.wait) {
+			// `xdg-open` will block the process unless stdio is ignored
+			// and it's detached from the parent even if it's unref'd.
+			childProcessOptions.stdio = 'ignore';
+			childProcessOptions.detached = true;
+		}
+	}
+
+	if (options.target) {
+		cliArguments.push(options.target);
+	}
+
+	if (platform === 'darwin' && appArguments.length > 0) {
+		cliArguments.push('--args', ...appArguments);
+	}
+
+	const subprocess = childProcess.spawn(command, cliArguments, childProcessOptions);
+
+	if (options.wait) {
+		return new Promise((resolve, reject) => {
+			subprocess.once('error', reject);
+
+			subprocess.once('close', exitCode => {
+				if (!options.allowNonzeroExitCode && exitCode > 0) {
+					reject(new Error(`Exited with code ${exitCode}`));
+					return;
+				}
+
+				resolve(subprocess);
+			});
+		});
+	}
+
+	subprocess.unref();
+
+	return subprocess;
+};
+
+const open = (target, options) => {
+	if (typeof target !== 'string') {
+		throw new TypeError('Expected a `target`');
+	}
+
+	return baseOpen({
+		...options,
+		target
+	});
+};
+
+const openApp = (name, options) => {
+	if (typeof name !== 'string') {
+		throw new TypeError('Expected a `name`');
+	}
+
+	const {arguments: appArguments = []} = options || {};
+	if (appArguments !== undefined && appArguments !== null && !Array.isArray(appArguments)) {
+		throw new TypeError('Expected `appArguments` as Array type');
+	}
+
+	return baseOpen({
+		...options,
+		app: {
+			name,
+			arguments: appArguments
+		}
+	});
+};
+
+function detectArchBinary(binary) {
+	if (typeof binary === 'string' || Array.isArray(binary)) {
+		return binary;
+	}
+
+	const {[arch]: archBinary} = binary;
+
+	if (!archBinary) {
+		throw new Error(`${arch} is not supported`);
+	}
+
+	return archBinary;
+}
+
+function detectPlatformBinary({[platform]: platformBinary}, {wsl}) {
+	if (wsl && isWsl) {
+		return detectArchBinary(wsl);
+	}
+
+	if (!platformBinary) {
+		throw new Error(`${platform} is not supported`);
+	}
+
+	return detectArchBinary(platformBinary);
+}
+
+const apps = {};
+
+defineLazyProperty(apps, 'chrome', () => detectPlatformBinary({
+	darwin: 'google chrome',
+	win32: 'chrome',
+	linux: ['google-chrome', 'google-chrome-stable', 'chromium']
+}, {
+	wsl: {
+		ia32: '/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+		x64: ['/mnt/c/Program Files/Google/Chrome/Application/chrome.exe', '/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe']
+	}
+}));
+
+defineLazyProperty(apps, 'firefox', () => detectPlatformBinary({
+	darwin: 'firefox',
+	win32: 'C:\\Program Files\\Mozilla Firefox\\firefox.exe',
+	linux: 'firefox'
+}, {
+	wsl: '/mnt/c/Program Files/Mozilla Firefox/firefox.exe'
+}));
+
+defineLazyProperty(apps, 'edge', () => detectPlatformBinary({
+	darwin: 'microsoft edge',
+	win32: 'msedge',
+	linux: ['microsoft-edge', 'microsoft-edge-dev']
+}, {
+	wsl: '/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
+}));
+
+open.apps = apps;
+open.openApp = openApp;
+
+var open_1 = open;
+
+var open$1 = /*@__PURE__*/getDefaultExportFromCjs(open_1);
+
+var crossSpawn = {exports: {}};
+
+var windows;
+var hasRequiredWindows;
+
+function requireWindows () {
+	if (hasRequiredWindows) return windows;
+	hasRequiredWindows = 1;
+	windows = isexe;
+	isexe.sync = sync;
+
+	var fs = require$$0__default;
+
+	function checkPathExt (path, options) {
+	  var pathext = options.pathExt !== undefined ?
+	    options.pathExt : process.env.PATHEXT;
+
+	  if (!pathext) {
+	    return true
+	  }
+
+	  pathext = pathext.split(';');
+	  if (pathext.indexOf('') !== -1) {
+	    return true
+	  }
+	  for (var i = 0; i < pathext.length; i++) {
+	    var p = pathext[i].toLowerCase();
+	    if (p && path.substr(-p.length).toLowerCase() === p) {
+	      return true
+	    }
+	  }
+	  return false
+	}
+
+	function checkStat (stat, path, options) {
+	  if (!stat.isSymbolicLink() && !stat.isFile()) {
+	    return false
+	  }
+	  return checkPathExt(path, options)
+	}
+
+	function isexe (path, options, cb) {
+	  fs.stat(path, function (er, stat) {
+	    cb(er, er ? false : checkStat(stat, path, options));
+	  });
+	}
+
+	function sync (path, options) {
+	  return checkStat(fs.statSync(path), path, options)
+	}
+	return windows;
+}
+
+var mode;
+var hasRequiredMode;
+
+function requireMode () {
+	if (hasRequiredMode) return mode;
+	hasRequiredMode = 1;
+	mode = isexe;
+	isexe.sync = sync;
+
+	var fs = require$$0__default;
+
+	function isexe (path, options, cb) {
+	  fs.stat(path, function (er, stat) {
+	    cb(er, er ? false : checkStat(stat, options));
+	  });
+	}
+
+	function sync (path, options) {
+	  return checkStat(fs.statSync(path), options)
+	}
+
+	function checkStat (stat, options) {
+	  return stat.isFile() && checkMode(stat, options)
+	}
+
+	function checkMode (stat, options) {
+	  var mod = stat.mode;
+	  var uid = stat.uid;
+	  var gid = stat.gid;
+
+	  var myUid = options.uid !== undefined ?
+	    options.uid : process.getuid && process.getuid();
+	  var myGid = options.gid !== undefined ?
+	    options.gid : process.getgid && process.getgid();
+
+	  var u = parseInt('100', 8);
+	  var g = parseInt('010', 8);
+	  var o = parseInt('001', 8);
+	  var ug = u | g;
+
+	  var ret = (mod & o) ||
+	    (mod & g) && gid === myGid ||
+	    (mod & u) && uid === myUid ||
+	    (mod & ug) && myUid === 0;
+
+	  return ret
+	}
+	return mode;
+}
+
+var core;
+if (process.platform === 'win32' || commonjsGlobal.TESTING_WINDOWS) {
+  core = requireWindows();
+} else {
+  core = requireMode();
+}
+
+var isexe_1 = isexe$1;
+isexe$1.sync = sync;
+
+function isexe$1 (path, options, cb) {
+  if (typeof options === 'function') {
+    cb = options;
+    options = {};
+  }
+
+  if (!cb) {
+    if (typeof Promise !== 'function') {
+      throw new TypeError('callback not provided')
+    }
+
+    return new Promise(function (resolve, reject) {
+      isexe$1(path, options || {}, function (er, is) {
+        if (er) {
+          reject(er);
+        } else {
+          resolve(is);
+        }
+      });
+    })
+  }
+
+  core(path, options || {}, function (er, is) {
+    // ignore EACCES because that just means we aren't allowed to run it
+    if (er) {
+      if (er.code === 'EACCES' || options && options.ignoreErrors) {
+        er = null;
+        is = false;
+      }
+    }
+    cb(er, is);
+  });
+}
+
+function sync (path, options) {
+  // my kingdom for a filtered catch
+  try {
+    return core.sync(path, options || {})
+  } catch (er) {
+    if (options && options.ignoreErrors || er.code === 'EACCES') {
+      return false
+    } else {
+      throw er
+    }
+  }
+}
+
+const isWindows = process.platform === 'win32' ||
+    process.env.OSTYPE === 'cygwin' ||
+    process.env.OSTYPE === 'msys';
+
+const path$2 = require$$0$4;
+const COLON = isWindows ? ';' : ':';
+const isexe = isexe_1;
+
+const getNotFoundError = (cmd) =>
+  Object.assign(new Error(`not found: ${cmd}`), { code: 'ENOENT' });
+
+const getPathInfo = (cmd, opt) => {
+  const colon = opt.colon || COLON;
+
+  // If it has a slash, then we don't bother searching the pathenv.
+  // just check the file itself, and that's it.
+  const pathEnv = cmd.match(/\//) || isWindows && cmd.match(/\\/) ? ['']
+    : (
+      [
+        // windows always checks the cwd first
+        ...(isWindows ? [process.cwd()] : []),
+        ...(opt.path || process.env.PATH ||
+          /* istanbul ignore next: very unusual */ '').split(colon),
+      ]
+    );
+  const pathExtExe = isWindows
+    ? opt.pathExt || process.env.PATHEXT || '.EXE;.CMD;.BAT;.COM'
+    : '';
+  const pathExt = isWindows ? pathExtExe.split(colon) : [''];
+
+  if (isWindows) {
+    if (cmd.indexOf('.') !== -1 && pathExt[0] !== '')
+      pathExt.unshift('');
+  }
+
+  return {
+    pathEnv,
+    pathExt,
+    pathExtExe,
+  }
+};
+
+const which$1 = (cmd, opt, cb) => {
+  if (typeof opt === 'function') {
+    cb = opt;
+    opt = {};
+  }
+  if (!opt)
+    opt = {};
+
+  const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
+  const found = [];
+
+  const step = i => new Promise((resolve, reject) => {
+    if (i === pathEnv.length)
+      return opt.all && found.length ? resolve(found)
+        : reject(getNotFoundError(cmd))
+
+    const ppRaw = pathEnv[i];
+    const pathPart = /^".*"$/.test(ppRaw) ? ppRaw.slice(1, -1) : ppRaw;
+
+    const pCmd = path$2.join(pathPart, cmd);
+    const p = !pathPart && /^\.[\\\/]/.test(cmd) ? cmd.slice(0, 2) + pCmd
+      : pCmd;
+
+    resolve(subStep(p, i, 0));
+  });
+
+  const subStep = (p, i, ii) => new Promise((resolve, reject) => {
+    if (ii === pathExt.length)
+      return resolve(step(i + 1))
+    const ext = pathExt[ii];
+    isexe(p + ext, { pathExt: pathExtExe }, (er, is) => {
+      if (!er && is) {
+        if (opt.all)
+          found.push(p + ext);
+        else
+          return resolve(p + ext)
+      }
+      return resolve(subStep(p, i, ii + 1))
+    });
+  });
+
+  return cb ? step(0).then(res => cb(null, res), cb) : step(0)
+};
+
+const whichSync = (cmd, opt) => {
+  opt = opt || {};
+
+  const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
+  const found = [];
+
+  for (let i = 0; i < pathEnv.length; i ++) {
+    const ppRaw = pathEnv[i];
+    const pathPart = /^".*"$/.test(ppRaw) ? ppRaw.slice(1, -1) : ppRaw;
+
+    const pCmd = path$2.join(pathPart, cmd);
+    const p = !pathPart && /^\.[\\\/]/.test(cmd) ? cmd.slice(0, 2) + pCmd
+      : pCmd;
+
+    for (let j = 0; j < pathExt.length; j ++) {
+      const cur = p + pathExt[j];
+      try {
+        const is = isexe.sync(cur, { pathExt: pathExtExe });
+        if (is) {
+          if (opt.all)
+            found.push(cur);
+          else
+            return cur
+        }
+      } catch (ex) {}
+    }
+  }
+
+  if (opt.all && found.length)
+    return found
+
+  if (opt.nothrow)
+    return null
+
+  throw getNotFoundError(cmd)
+};
+
+var which_1 = which$1;
+which$1.sync = whichSync;
+
+var pathKey$1 = {exports: {}};
+
+const pathKey = (options = {}) => {
+	const environment = options.env || process.env;
+	const platform = options.platform || process.platform;
+
+	if (platform !== 'win32') {
+		return 'PATH';
+	}
+
+	return Object.keys(environment).reverse().find(key => key.toUpperCase() === 'PATH') || 'Path';
+};
+
+pathKey$1.exports = pathKey;
+// TODO: Remove this for the next major release
+pathKey$1.exports.default = pathKey;
+
+var pathKeyExports = pathKey$1.exports;
+
+const path$1 = require$$0$4;
+const which = which_1;
+const getPathKey = pathKeyExports;
+
+function resolveCommandAttempt(parsed, withoutPathExt) {
+    const env = parsed.options.env || process.env;
+    const cwd = process.cwd();
+    const hasCustomCwd = parsed.options.cwd != null;
+    // Worker threads do not have process.chdir()
+    const shouldSwitchCwd = hasCustomCwd && process.chdir !== undefined && !process.chdir.disabled;
+
+    // If a custom `cwd` was specified, we need to change the process cwd
+    // because `which` will do stat calls but does not support a custom cwd
+    if (shouldSwitchCwd) {
+        try {
+            process.chdir(parsed.options.cwd);
+        } catch (err) {
+            /* Empty */
+        }
+    }
+
+    let resolved;
+
+    try {
+        resolved = which.sync(parsed.command, {
+            path: env[getPathKey({ env })],
+            pathExt: withoutPathExt ? path$1.delimiter : undefined,
+        });
+    } catch (e) {
+        /* Empty */
+    } finally {
+        if (shouldSwitchCwd) {
+            process.chdir(cwd);
+        }
+    }
+
+    // If we successfully resolved, ensure that an absolute path is returned
+    // Note that when a custom `cwd` was used, we need to resolve to an absolute path based on it
+    if (resolved) {
+        resolved = path$1.resolve(hasCustomCwd ? parsed.options.cwd : '', resolved);
+    }
+
+    return resolved;
+}
+
+function resolveCommand$1(parsed) {
+    return resolveCommandAttempt(parsed) || resolveCommandAttempt(parsed, true);
+}
+
+var resolveCommand_1 = resolveCommand$1;
+
+var _escape = {};
+
+// See http://www.robvanderwoude.com/escapechars.php
+const metaCharsRegExp = /([()\][%!^"`<>&|;, *?])/g;
+
+function escapeCommand(arg) {
+    // Escape meta chars
+    arg = arg.replace(metaCharsRegExp, '^$1');
+
+    return arg;
+}
+
+function escapeArgument(arg, doubleEscapeMetaChars) {
+    // Convert to string
+    arg = `${arg}`;
+
+    // Algorithm below is based on https://qntm.org/cmd
+
+    // Sequence of backslashes followed by a double quote:
+    // double up all the backslashes and escape the double quote
+    arg = arg.replace(/(\\*)"/g, '$1$1\\"');
+
+    // Sequence of backslashes followed by the end of the string
+    // (which will become a double quote later):
+    // double up all the backslashes
+    arg = arg.replace(/(\\*)$/, '$1$1');
+
+    // All other backslashes occur literally
+
+    // Quote the whole thing:
+    arg = `"${arg}"`;
+
+    // Escape meta chars
+    arg = arg.replace(metaCharsRegExp, '^$1');
+
+    // Double escape meta chars if necessary
+    if (doubleEscapeMetaChars) {
+        arg = arg.replace(metaCharsRegExp, '^$1');
+    }
+
+    return arg;
+}
+
+_escape.command = escapeCommand;
+_escape.argument = escapeArgument;
+
+var shebangRegex$1 = /^#!(.*)/;
+
+const shebangRegex = shebangRegex$1;
+
+var shebangCommand$1 = (string = '') => {
+	const match = string.match(shebangRegex);
+
+	if (!match) {
+		return null;
+	}
+
+	const [path, argument] = match[0].replace(/#! ?/, '').split(' ');
+	const binary = path.split('/').pop();
+
+	if (binary === 'env') {
+		return argument;
+	}
+
+	return argument ? `${binary} ${argument}` : binary;
+};
+
+const fs = require$$0__default;
+const shebangCommand = shebangCommand$1;
+
+function readShebang$1(command) {
+    // Read the first 150 bytes from the file
+    const size = 150;
+    const buffer = Buffer.alloc(size);
+
+    let fd;
+
+    try {
+        fd = fs.openSync(command, 'r');
+        fs.readSync(fd, buffer, 0, size, 0);
+        fs.closeSync(fd);
+    } catch (e) { /* Empty */ }
+
+    // Attempt to extract shebang (null is returned if not a shebang)
+    return shebangCommand(buffer.toString());
+}
+
+var readShebang_1 = readShebang$1;
+
+const path = require$$0$4;
+const resolveCommand = resolveCommand_1;
+const escape$1 = _escape;
+const readShebang = readShebang_1;
+
+const isWin$1 = process.platform === 'win32';
+const isExecutableRegExp = /\.(?:com|exe)$/i;
+const isCmdShimRegExp = /node_modules[\\/].bin[\\/][^\\/]+\.cmd$/i;
+
+function detectShebang(parsed) {
+    parsed.file = resolveCommand(parsed);
+
+    const shebang = parsed.file && readShebang(parsed.file);
+
+    if (shebang) {
+        parsed.args.unshift(parsed.file);
+        parsed.command = shebang;
+
+        return resolveCommand(parsed);
+    }
+
+    return parsed.file;
+}
+
+function parseNonShell(parsed) {
+    if (!isWin$1) {
+        return parsed;
+    }
+
+    // Detect & add support for shebangs
+    const commandFile = detectShebang(parsed);
+
+    // We don't need a shell if the command filename is an executable
+    const needsShell = !isExecutableRegExp.test(commandFile);
+
+    // If a shell is required, use cmd.exe and take care of escaping everything correctly
+    // Note that `forceShell` is an hidden option used only in tests
+    if (parsed.options.forceShell || needsShell) {
+        // Need to double escape meta chars if the command is a cmd-shim located in `node_modules/.bin/`
+        // The cmd-shim simply calls execute the package bin file with NodeJS, proxying any argument
+        // Because the escape of metachars with ^ gets interpreted when the cmd.exe is first called,
+        // we need to double escape them
+        const needsDoubleEscapeMetaChars = isCmdShimRegExp.test(commandFile);
+
+        // Normalize posix paths into OS compatible paths (e.g.: foo/bar -> foo\bar)
+        // This is necessary otherwise it will always fail with ENOENT in those cases
+        parsed.command = path.normalize(parsed.command);
+
+        // Escape command & arguments
+        parsed.command = escape$1.command(parsed.command);
+        parsed.args = parsed.args.map((arg) => escape$1.argument(arg, needsDoubleEscapeMetaChars));
+
+        const shellCommand = [parsed.command].concat(parsed.args).join(' ');
+
+        parsed.args = ['/d', '/s', '/c', `"${shellCommand}"`];
+        parsed.command = process.env.comspec || 'cmd.exe';
+        parsed.options.windowsVerbatimArguments = true; // Tell node's spawn that the arguments are already escaped
+    }
+
+    return parsed;
+}
+
+function parse$4(command, args, options) {
+    // Normalize arguments, similar to nodejs
+    if (args && !Array.isArray(args)) {
+        options = args;
+        args = null;
+    }
+
+    args = args ? args.slice(0) : []; // Clone array to avoid changing the original
+    options = Object.assign({}, options); // Clone object to avoid changing the original
+
+    // Build our parsed object
+    const parsed = {
+        command,
+        args,
+        options,
+        file: undefined,
+        original: {
+            command,
+            args,
+        },
+    };
+
+    // Delegate further parsing to shell or non-shell
+    return options.shell ? parsed : parseNonShell(parsed);
+}
+
+var parse_1 = parse$4;
+
+const isWin = process.platform === 'win32';
+
+function notFoundError(original, syscall) {
+    return Object.assign(new Error(`${syscall} ${original.command} ENOENT`), {
+        code: 'ENOENT',
+        errno: 'ENOENT',
+        syscall: `${syscall} ${original.command}`,
+        path: original.command,
+        spawnargs: original.args,
+    });
+}
+
+function hookChildProcess(cp, parsed) {
+    if (!isWin) {
+        return;
+    }
+
+    const originalEmit = cp.emit;
+
+    cp.emit = function (name, arg1) {
+        // If emitting "exit" event and exit code is 1, we need to check if
+        // the command exists and emit an "error" instead
+        // See https://github.com/IndigoUnited/node-cross-spawn/issues/16
+        if (name === 'exit') {
+            const err = verifyENOENT(arg1, parsed);
+
+            if (err) {
+                return originalEmit.call(cp, 'error', err);
+            }
+        }
+
+        return originalEmit.apply(cp, arguments); // eslint-disable-line prefer-rest-params
+    };
+}
+
+function verifyENOENT(status, parsed) {
+    if (isWin && status === 1 && !parsed.file) {
+        return notFoundError(parsed.original, 'spawn');
+    }
+
+    return null;
+}
+
+function verifyENOENTSync(status, parsed) {
+    if (isWin && status === 1 && !parsed.file) {
+        return notFoundError(parsed.original, 'spawnSync');
+    }
+
+    return null;
+}
+
+var enoent$1 = {
+    hookChildProcess,
+    verifyENOENT,
+    verifyENOENTSync,
+    notFoundError,
+};
+
+const cp = require$$2$1;
+const parse$3 = parse_1;
+const enoent = enoent$1;
+
+function spawn(command, args, options) {
+    // Parse the arguments
+    const parsed = parse$3(command, args, options);
+
+    // Spawn the child process
+    const spawned = cp.spawn(parsed.command, parsed.args, parsed.options);
+
+    // Hook into child process "exit" event to emit an error if the command
+    // does not exists, see: https://github.com/IndigoUnited/node-cross-spawn/issues/16
+    enoent.hookChildProcess(spawned, parsed);
+
+    return spawned;
+}
+
+function spawnSync(command, args, options) {
+    // Parse the arguments
+    const parsed = parse$3(command, args, options);
+
+    // Spawn the child process
+    const result = cp.spawnSync(parsed.command, parsed.args, parsed.options);
+
+    // Analyze if the command does not exist, see: https://github.com/IndigoUnited/node-cross-spawn/issues/16
+    result.error = result.error || enoent.verifyENOENTSync(result.status, parsed);
+
+    return result;
+}
+
+crossSpawn.exports = spawn;
+crossSpawn.exports.spawn = spawn;
+crossSpawn.exports.sync = spawnSync;
+
+crossSpawn.exports._parse = parse$3;
+crossSpawn.exports._enoent = enoent;
+
+var crossSpawnExports = crossSpawn.exports;
+var spawn$1 = /*@__PURE__*/getDefaultExportFromCjs(crossSpawnExports);
+
+/**
+ * The following is modified based on source found in
+ * https://github.com/facebook/create-react-app
+ *
+ * MIT Licensed
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * https://github.com/facebook/create-react-app/blob/master/LICENSE
+ *
+ */
+/**
+ * Reads the BROWSER environment variable and decides what to do with it.
+ */
+function openBrowser(url, opt, logger) {
+    // The browser executable to open.
+    // See https://github.com/sindresorhus/open#app for documentation.
+    const browser = typeof opt === 'string' ? opt : process.env.BROWSER || '';
+    if (browser.toLowerCase().endsWith('.js')) {
+        executeNodeScript(browser, url, logger);
+    }
+    else if (browser.toLowerCase() !== 'none') {
+        const browserArgs = process.env.BROWSER_ARGS
+            ? process.env.BROWSER_ARGS.split(' ')
+            : [];
+        startBrowserProcess(browser, browserArgs, url);
+    }
+}
+function executeNodeScript(scriptPath, url, logger) {
+    const extraArgs = process.argv.slice(2);
+    const child = spawn$1(process.execPath, [scriptPath, ...extraArgs, url], {
+        stdio: 'inherit',
+    });
+    child.on('close', (code) => {
+        if (code !== 0) {
+            logger.error(colors$1.red(`\nThe script specified as BROWSER environment variable failed.\n\n${colors$1.cyan(scriptPath)} exited with code ${code}.`), { error: null });
+        }
+    });
+}
+const supportedChromiumBrowsers = [
+    'Google Chrome Canary',
+    'Google Chrome Dev',
+    'Google Chrome Beta',
+    'Google Chrome',
+    'Microsoft Edge',
+    'Brave Browser',
+    'Vivaldi',
+    'Chromium',
+];
+async function startBrowserProcess(browser, browserArgs, url) {
+    // If we're on OS X, the user hasn't specifically
+    // requested a different browser, we can try opening
+    // a Chromium browser with AppleScript. This lets us reuse an
+    // existing tab when possible instead of creating a new one.
+    const preferredOSXBrowser = browser === 'google chrome' ? 'Google Chrome' : browser;
+    const shouldTryOpenChromeWithAppleScript = process.platform === 'darwin' &&
+        (!preferredOSXBrowser ||
+            supportedChromiumBrowsers.includes(preferredOSXBrowser));
+    if (shouldTryOpenChromeWithAppleScript) {
+        try {
+            const ps = await execAsync('ps cax');
+            const openedBrowser = preferredOSXBrowser && ps.includes(preferredOSXBrowser)
+                ? preferredOSXBrowser
+                : supportedChromiumBrowsers.find((b) => ps.includes(b));
+            if (openedBrowser) {
+                // Try our best to reuse existing tab with AppleScript
+                await execAsync(`osascript openChrome.applescript "${encodeURI(url)}" "${openedBrowser}"`, {
+                    cwd: join$2(VITE_PACKAGE_DIR, 'bin'),
+                });
+                return true;
+            }
+        }
+        catch (err) {
+            // Ignore errors
+        }
+    }
+    // Another special case: on OS X, check if BROWSER has been set to "open".
+    // In this case, instead of passing the string `open` to `open` function (which won't work),
+    // just ignore it (thus ensuring the intended behavior, i.e. opening the system browser):
+    // https://github.com/facebook/create-react-app/pull/1690#issuecomment-283518768
+    if (process.platform === 'darwin' && browser === 'open') {
+        browser = undefined;
+    }
+    // Fallback to open
+    // (It will always open new tab)
+    try {
+        const options = browser
+            ? { app: { name: browser, arguments: browserArgs } }
+            : {};
+        open$1(url, options).catch(() => { }); // Prevent `unhandledRejection` error.
+        return true;
+    }
+    catch (err) {
+        return false;
+    }
+}
+function execAsync(command, options) {
+    return new Promise((resolve, reject) => {
+        exec(command, options, (error, stdout) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(stdout.toString());
+            }
+        });
+    });
+}
+
 function bindShortcuts(server, opts) {
     if (!server.httpServer || !process.stdin.isTTY || process.env.CI) {
         return;
     }
-    server._shortcutsOptions = opts;
-    if (opts.print) {
+    const isDev = isDevServer(server);
+    if (isDev) {
+        server._shortcutsOptions = opts;
+    }
+    if (opts?.print) {
         server.config.logger.info(colors$1.dim(colors$1.green('  ➜')) +
             colors$1.dim('  press ') +
             colors$1.bold('h') +
             colors$1.dim(' to show help'));
     }
-    const shortcuts = (opts.customShortcuts ?? [])
+    const shortcuts = (opts?.customShortcuts ?? [])
         .filter(isDefined)
-        .concat(BASE_SHORTCUTS);
+        // @ts-expect-error passing the right types, but typescript can't detect it
+        .concat(isDev ? BASE_DEV_SHORTCUTS : BASE_PREVIEW_SHORTCUTS);
     let actionRunning = false;
     const onInput = async (input) => {
         // ctrl+c or ctrl+d
         if (input === '\x03' || input === '\x04') {
-            await server.close().finally(() => process.exit(1));
+            try {
+                if (isDev) {
+                    await server.close();
+                }
+                else {
+                    server.httpServer.close();
+                }
+            }
+            finally {
+                process.exit(1);
+            }
             return;
         }
         if (actionRunning)
@@ -55695,7 +57147,10 @@ function bindShortcuts(server, opts) {
         process.stdin.off('data', onInput).pause();
     });
 }
-const BASE_SHORTCUTS = [
+function isDevServer(server) {
+    return 'pluginContainer' in server;
+}
+const BASE_DEV_SHORTCUTS = [
     {
         key: 'r',
         description: 'restart the server',
@@ -55730,6 +57185,28 @@ const BASE_SHORTCUTS = [
         description: 'quit',
         async action(server) {
             await server.close().finally(() => process.exit());
+        },
+    },
+];
+const BASE_PREVIEW_SHORTCUTS = [
+    {
+        key: 'o',
+        description: 'open in browser',
+        action(server) {
+            const url = server.resolvedUrls.local[0] ?? server.resolvedUrls.network[0];
+            openBrowser(url, true, server.config.logger);
+        },
+    },
+    {
+        key: 'q',
+        description: 'quit',
+        action(server) {
+            try {
+                server.httpServer.close();
+            }
+            finally {
+                process.exit();
+            }
         },
     },
 ];
@@ -57994,7 +59471,7 @@ function push(dest, name, elem) {
  * @return {Object} The parsed object
  * @public
  */
-function parse$4(header) {
+function parse$2(header) {
   const offers = Object.create(null);
   let params = Object.create(null);
   let mustUnescape = false;
@@ -58170,7 +59647,7 @@ function format$1(extensions) {
     .join(', ');
 }
 
-var extension$1 = { format: format$1, parse: parse$4 };
+var extension$1 = { format: format$1, parse: parse$2 };
 
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^Readable$" }] */
 
@@ -58198,7 +59675,7 @@ const {
 const {
   EventTarget: { addEventListener, removeEventListener }
 } = eventTarget;
-const { format, parse: parse$3 } = extension$1;
+const { format, parse: parse$1 } = extension$1;
 const { toBuffer } = bufferUtilExports;
 
 const closeTimeout = 30 * 1000;
@@ -59123,7 +60600,7 @@ function initAsClient(websocket, address, protocols, options) {
       let extensions;
 
       try {
-        extensions = parse$3(secWebSocketExtensions);
+        extensions = parse$1(secWebSocketExtensions);
       } catch (err) {
         const message = 'Invalid Sec-WebSocket-Extensions header';
         abortHandshake$1(websocket, socket, message);
@@ -59490,7 +60967,7 @@ const { tokenChars } = validationExports;
  * @return {Set} The subprotocol names
  * @public
  */
-function parse$2(header) {
+function parse(header) {
   const protocols = new Set();
   let start = -1;
   let end = -1;
@@ -59540,7 +61017,7 @@ function parse$2(header) {
   return protocols;
 }
 
-var subprotocol$1 = { parse: parse$2 };
+var subprotocol$1 = { parse };
 
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^net|tls|https$" }] */
 
@@ -62393,6 +63870,16 @@ function proxyMiddleware(httpServer, options, config) {
                 });
             });
         });
+        // https://github.com/http-party/node-http-proxy/issues/1520#issue-877626125
+        // https://github.com/chimurai/http-proxy-middleware/blob/cd58f962aec22c925b7df5140502978da8f87d5f/src/plugins/default/debug-proxy-errors-plugin.ts#L25-L37
+        proxy.on('proxyRes', (proxyRes, req, res) => {
+            res.on('close', () => {
+                if (!res.writableEnded) {
+                    debug$1?.('destroying proxyRes in proxyRes close event');
+                    proxyRes.destroy();
+                }
+            });
+        });
         // clone before saving because http-proxy mutates the options
         proxies[context] = [proxy, { ...opts }];
     });
@@ -62866,6 +64353,7 @@ const processNodeUrl = (attr, sourceCodeLocation, s, config, htmlPath, originalU
 const devHtmlHook = async (html, { path: htmlPath, filename, server, originalUrl }) => {
     const { config, moduleGraph, watcher } = server;
     const base = config.base || '/';
+    htmlPath = decodeURI(htmlPath);
     let proxyModulePath;
     let proxyModuleUrl;
     const trailingSlash = htmlPath.endsWith('/');
@@ -62953,7 +64441,7 @@ const devHtmlHook = async (html, { path: htmlPath, filename, server, originalUrl
         let content = '';
         if (result) {
             if (result.map) {
-                if (result.map.mappings && !result.map.sourcesContent) {
+                if (result.map.mappings) {
                     await injectSourcesContent(result.map, proxyModulePath, config.logger);
                 }
                 content = getCodeWithSourcemap('css', result.code, result.map);
@@ -63113,7 +64601,7 @@ class ModuleGraph {
             });
         }
     }
-    invalidateModule(mod, seen = new Set(), timestamp = Date.now(), isHmr = false) {
+    invalidateModule(mod, seen = new Set(), timestamp = Date.now(), isHmr = false, hmrBoundaries = []) {
         if (seen.has(mod)) {
             return;
         }
@@ -63132,6 +64620,10 @@ class ModuleGraph {
         mod.ssrTransformResult = null;
         mod.ssrModule = null;
         mod.ssrError = null;
+        // Fix #3033
+        if (hmrBoundaries.includes(mod)) {
+            return;
+        }
         mod.importers.forEach((importer) => {
             if (!importer.acceptedHmrDeps.has(mod)) {
                 this.invalidateModule(importer, seen, timestamp, isHmr);
@@ -63330,1167 +64822,6 @@ class ModuleGraph {
     }
 }
 
-var isWsl$2 = {exports: {}};
-
-const fs$3 = require$$0__default;
-
-let isDocker$2;
-
-function hasDockerEnv() {
-	try {
-		fs$3.statSync('/.dockerenv');
-		return true;
-	} catch (_) {
-		return false;
-	}
-}
-
-function hasDockerCGroup() {
-	try {
-		return fs$3.readFileSync('/proc/self/cgroup', 'utf8').includes('docker');
-	} catch (_) {
-		return false;
-	}
-}
-
-var isDocker_1 = () => {
-	if (isDocker$2 === undefined) {
-		isDocker$2 = hasDockerEnv() || hasDockerCGroup();
-	}
-
-	return isDocker$2;
-};
-
-const os = require$$2;
-const fs$2 = require$$0__default;
-const isDocker$1 = isDocker_1;
-
-const isWsl$1 = () => {
-	if (process.platform !== 'linux') {
-		return false;
-	}
-
-	if (os.release().toLowerCase().includes('microsoft')) {
-		if (isDocker$1()) {
-			return false;
-		}
-
-		return true;
-	}
-
-	try {
-		return fs$2.readFileSync('/proc/version', 'utf8').toLowerCase().includes('microsoft') ?
-			!isDocker$1() : false;
-	} catch (_) {
-		return false;
-	}
-};
-
-if (process.env.__IS_WSL_TEST__) {
-	isWsl$2.exports = isWsl$1;
-} else {
-	isWsl$2.exports = isWsl$1();
-}
-
-var isWslExports = isWsl$2.exports;
-
-var defineLazyProp = (object, propertyName, fn) => {
-	const define = value => Object.defineProperty(object, propertyName, {value, enumerable: true, writable: true});
-
-	Object.defineProperty(object, propertyName, {
-		configurable: true,
-		enumerable: true,
-		get() {
-			const result = fn();
-			define(result);
-			return result;
-		},
-		set(value) {
-			define(value);
-		}
-	});
-
-	return object;
-};
-
-const path$3 = require$$0$4;
-const childProcess = require$$2$1;
-const {promises: fs$1, constants: fsConstants} = require$$0__default;
-const isWsl = isWslExports;
-const isDocker = isDocker_1;
-const defineLazyProperty = defineLazyProp;
-
-// Path to included `xdg-open`.
-const localXdgOpenPath = path$3.join(__dirname, 'xdg-open');
-
-const {platform, arch} = process;
-
-// Podman detection
-const hasContainerEnv = () => {
-	try {
-		fs$1.statSync('/run/.containerenv');
-		return true;
-	} catch {
-		return false;
-	}
-};
-
-let cachedResult;
-function isInsideContainer() {
-	if (cachedResult === undefined) {
-		cachedResult = hasContainerEnv() || isDocker();
-	}
-
-	return cachedResult;
-}
-
-/**
-Get the mount point for fixed drives in WSL.
-
-@inner
-@returns {string} The mount point.
-*/
-const getWslDrivesMountPoint = (() => {
-	// Default value for "root" param
-	// according to https://docs.microsoft.com/en-us/windows/wsl/wsl-config
-	const defaultMountPoint = '/mnt/';
-
-	let mountPoint;
-
-	return async function () {
-		if (mountPoint) {
-			// Return memoized mount point value
-			return mountPoint;
-		}
-
-		const configFilePath = '/etc/wsl.conf';
-
-		let isConfigFileExists = false;
-		try {
-			await fs$1.access(configFilePath, fsConstants.F_OK);
-			isConfigFileExists = true;
-		} catch {}
-
-		if (!isConfigFileExists) {
-			return defaultMountPoint;
-		}
-
-		const configContent = await fs$1.readFile(configFilePath, {encoding: 'utf8'});
-		const configMountPoint = /(?<!#.*)root\s*=\s*(?<mountPoint>.*)/g.exec(configContent);
-
-		if (!configMountPoint) {
-			return defaultMountPoint;
-		}
-
-		mountPoint = configMountPoint.groups.mountPoint.trim();
-		mountPoint = mountPoint.endsWith('/') ? mountPoint : `${mountPoint}/`;
-
-		return mountPoint;
-	};
-})();
-
-const pTryEach = async (array, mapper) => {
-	let latestError;
-
-	for (const item of array) {
-		try {
-			return await mapper(item); // eslint-disable-line no-await-in-loop
-		} catch (error) {
-			latestError = error;
-		}
-	}
-
-	throw latestError;
-};
-
-const baseOpen = async options => {
-	options = {
-		wait: false,
-		background: false,
-		newInstance: false,
-		allowNonzeroExitCode: false,
-		...options
-	};
-
-	if (Array.isArray(options.app)) {
-		return pTryEach(options.app, singleApp => baseOpen({
-			...options,
-			app: singleApp
-		}));
-	}
-
-	let {name: app, arguments: appArguments = []} = options.app || {};
-	appArguments = [...appArguments];
-
-	if (Array.isArray(app)) {
-		return pTryEach(app, appName => baseOpen({
-			...options,
-			app: {
-				name: appName,
-				arguments: appArguments
-			}
-		}));
-	}
-
-	let command;
-	const cliArguments = [];
-	const childProcessOptions = {};
-
-	if (platform === 'darwin') {
-		command = 'open';
-
-		if (options.wait) {
-			cliArguments.push('--wait-apps');
-		}
-
-		if (options.background) {
-			cliArguments.push('--background');
-		}
-
-		if (options.newInstance) {
-			cliArguments.push('--new');
-		}
-
-		if (app) {
-			cliArguments.push('-a', app);
-		}
-	} else if (platform === 'win32' || (isWsl && !isInsideContainer() && !app)) {
-		const mountPoint = await getWslDrivesMountPoint();
-
-		command = isWsl ?
-			`${mountPoint}c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe` :
-			`${process.env.SYSTEMROOT}\\System32\\WindowsPowerShell\\v1.0\\powershell`;
-
-		cliArguments.push(
-			'-NoProfile',
-			'-NonInteractive',
-			'–ExecutionPolicy',
-			'Bypass',
-			'-EncodedCommand'
-		);
-
-		if (!isWsl) {
-			childProcessOptions.windowsVerbatimArguments = true;
-		}
-
-		const encodedArguments = ['Start'];
-
-		if (options.wait) {
-			encodedArguments.push('-Wait');
-		}
-
-		if (app) {
-			// Double quote with double quotes to ensure the inner quotes are passed through.
-			// Inner quotes are delimited for PowerShell interpretation with backticks.
-			encodedArguments.push(`"\`"${app}\`""`, '-ArgumentList');
-			if (options.target) {
-				appArguments.unshift(options.target);
-			}
-		} else if (options.target) {
-			encodedArguments.push(`"${options.target}"`);
-		}
-
-		if (appArguments.length > 0) {
-			appArguments = appArguments.map(arg => `"\`"${arg}\`""`);
-			encodedArguments.push(appArguments.join(','));
-		}
-
-		// Using Base64-encoded command, accepted by PowerShell, to allow special characters.
-		options.target = Buffer.from(encodedArguments.join(' '), 'utf16le').toString('base64');
-	} else {
-		if (app) {
-			command = app;
-		} else {
-			// When bundled by Webpack, there's no actual package file path and no local `xdg-open`.
-			const isBundled = !__dirname || __dirname === '/';
-
-			// Check if local `xdg-open` exists and is executable.
-			let exeLocalXdgOpen = false;
-			try {
-				await fs$1.access(localXdgOpenPath, fsConstants.X_OK);
-				exeLocalXdgOpen = true;
-			} catch {}
-
-			const useSystemXdgOpen = process.versions.electron ||
-				platform === 'android' || isBundled || !exeLocalXdgOpen;
-			command = useSystemXdgOpen ? 'xdg-open' : localXdgOpenPath;
-		}
-
-		if (appArguments.length > 0) {
-			cliArguments.push(...appArguments);
-		}
-
-		if (!options.wait) {
-			// `xdg-open` will block the process unless stdio is ignored
-			// and it's detached from the parent even if it's unref'd.
-			childProcessOptions.stdio = 'ignore';
-			childProcessOptions.detached = true;
-		}
-	}
-
-	if (options.target) {
-		cliArguments.push(options.target);
-	}
-
-	if (platform === 'darwin' && appArguments.length > 0) {
-		cliArguments.push('--args', ...appArguments);
-	}
-
-	const subprocess = childProcess.spawn(command, cliArguments, childProcessOptions);
-
-	if (options.wait) {
-		return new Promise((resolve, reject) => {
-			subprocess.once('error', reject);
-
-			subprocess.once('close', exitCode => {
-				if (!options.allowNonzeroExitCode && exitCode > 0) {
-					reject(new Error(`Exited with code ${exitCode}`));
-					return;
-				}
-
-				resolve(subprocess);
-			});
-		});
-	}
-
-	subprocess.unref();
-
-	return subprocess;
-};
-
-const open = (target, options) => {
-	if (typeof target !== 'string') {
-		throw new TypeError('Expected a `target`');
-	}
-
-	return baseOpen({
-		...options,
-		target
-	});
-};
-
-const openApp = (name, options) => {
-	if (typeof name !== 'string') {
-		throw new TypeError('Expected a `name`');
-	}
-
-	const {arguments: appArguments = []} = options || {};
-	if (appArguments !== undefined && appArguments !== null && !Array.isArray(appArguments)) {
-		throw new TypeError('Expected `appArguments` as Array type');
-	}
-
-	return baseOpen({
-		...options,
-		app: {
-			name,
-			arguments: appArguments
-		}
-	});
-};
-
-function detectArchBinary(binary) {
-	if (typeof binary === 'string' || Array.isArray(binary)) {
-		return binary;
-	}
-
-	const {[arch]: archBinary} = binary;
-
-	if (!archBinary) {
-		throw new Error(`${arch} is not supported`);
-	}
-
-	return archBinary;
-}
-
-function detectPlatformBinary({[platform]: platformBinary}, {wsl}) {
-	if (wsl && isWsl) {
-		return detectArchBinary(wsl);
-	}
-
-	if (!platformBinary) {
-		throw new Error(`${platform} is not supported`);
-	}
-
-	return detectArchBinary(platformBinary);
-}
-
-const apps = {};
-
-defineLazyProperty(apps, 'chrome', () => detectPlatformBinary({
-	darwin: 'google chrome',
-	win32: 'chrome',
-	linux: ['google-chrome', 'google-chrome-stable', 'chromium']
-}, {
-	wsl: {
-		ia32: '/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe',
-		x64: ['/mnt/c/Program Files/Google/Chrome/Application/chrome.exe', '/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe']
-	}
-}));
-
-defineLazyProperty(apps, 'firefox', () => detectPlatformBinary({
-	darwin: 'firefox',
-	win32: 'C:\\Program Files\\Mozilla Firefox\\firefox.exe',
-	linux: 'firefox'
-}, {
-	wsl: '/mnt/c/Program Files/Mozilla Firefox/firefox.exe'
-}));
-
-defineLazyProperty(apps, 'edge', () => detectPlatformBinary({
-	darwin: 'microsoft edge',
-	win32: 'msedge',
-	linux: ['microsoft-edge', 'microsoft-edge-dev']
-}, {
-	wsl: '/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
-}));
-
-open.apps = apps;
-open.openApp = openApp;
-
-var open_1 = open;
-
-var open$1 = /*@__PURE__*/getDefaultExportFromCjs(open_1);
-
-var crossSpawn = {exports: {}};
-
-var windows;
-var hasRequiredWindows;
-
-function requireWindows () {
-	if (hasRequiredWindows) return windows;
-	hasRequiredWindows = 1;
-	windows = isexe;
-	isexe.sync = sync;
-
-	var fs = require$$0__default;
-
-	function checkPathExt (path, options) {
-	  var pathext = options.pathExt !== undefined ?
-	    options.pathExt : process.env.PATHEXT;
-
-	  if (!pathext) {
-	    return true
-	  }
-
-	  pathext = pathext.split(';');
-	  if (pathext.indexOf('') !== -1) {
-	    return true
-	  }
-	  for (var i = 0; i < pathext.length; i++) {
-	    var p = pathext[i].toLowerCase();
-	    if (p && path.substr(-p.length).toLowerCase() === p) {
-	      return true
-	    }
-	  }
-	  return false
-	}
-
-	function checkStat (stat, path, options) {
-	  if (!stat.isSymbolicLink() && !stat.isFile()) {
-	    return false
-	  }
-	  return checkPathExt(path, options)
-	}
-
-	function isexe (path, options, cb) {
-	  fs.stat(path, function (er, stat) {
-	    cb(er, er ? false : checkStat(stat, path, options));
-	  });
-	}
-
-	function sync (path, options) {
-	  return checkStat(fs.statSync(path), path, options)
-	}
-	return windows;
-}
-
-var mode;
-var hasRequiredMode;
-
-function requireMode () {
-	if (hasRequiredMode) return mode;
-	hasRequiredMode = 1;
-	mode = isexe;
-	isexe.sync = sync;
-
-	var fs = require$$0__default;
-
-	function isexe (path, options, cb) {
-	  fs.stat(path, function (er, stat) {
-	    cb(er, er ? false : checkStat(stat, options));
-	  });
-	}
-
-	function sync (path, options) {
-	  return checkStat(fs.statSync(path), options)
-	}
-
-	function checkStat (stat, options) {
-	  return stat.isFile() && checkMode(stat, options)
-	}
-
-	function checkMode (stat, options) {
-	  var mod = stat.mode;
-	  var uid = stat.uid;
-	  var gid = stat.gid;
-
-	  var myUid = options.uid !== undefined ?
-	    options.uid : process.getuid && process.getuid();
-	  var myGid = options.gid !== undefined ?
-	    options.gid : process.getgid && process.getgid();
-
-	  var u = parseInt('100', 8);
-	  var g = parseInt('010', 8);
-	  var o = parseInt('001', 8);
-	  var ug = u | g;
-
-	  var ret = (mod & o) ||
-	    (mod & g) && gid === myGid ||
-	    (mod & u) && uid === myUid ||
-	    (mod & ug) && myUid === 0;
-
-	  return ret
-	}
-	return mode;
-}
-
-var core;
-if (process.platform === 'win32' || commonjsGlobal.TESTING_WINDOWS) {
-  core = requireWindows();
-} else {
-  core = requireMode();
-}
-
-var isexe_1 = isexe$1;
-isexe$1.sync = sync;
-
-function isexe$1 (path, options, cb) {
-  if (typeof options === 'function') {
-    cb = options;
-    options = {};
-  }
-
-  if (!cb) {
-    if (typeof Promise !== 'function') {
-      throw new TypeError('callback not provided')
-    }
-
-    return new Promise(function (resolve, reject) {
-      isexe$1(path, options || {}, function (er, is) {
-        if (er) {
-          reject(er);
-        } else {
-          resolve(is);
-        }
-      });
-    })
-  }
-
-  core(path, options || {}, function (er, is) {
-    // ignore EACCES because that just means we aren't allowed to run it
-    if (er) {
-      if (er.code === 'EACCES' || options && options.ignoreErrors) {
-        er = null;
-        is = false;
-      }
-    }
-    cb(er, is);
-  });
-}
-
-function sync (path, options) {
-  // my kingdom for a filtered catch
-  try {
-    return core.sync(path, options || {})
-  } catch (er) {
-    if (options && options.ignoreErrors || er.code === 'EACCES') {
-      return false
-    } else {
-      throw er
-    }
-  }
-}
-
-const isWindows = process.platform === 'win32' ||
-    process.env.OSTYPE === 'cygwin' ||
-    process.env.OSTYPE === 'msys';
-
-const path$2 = require$$0$4;
-const COLON = isWindows ? ';' : ':';
-const isexe = isexe_1;
-
-const getNotFoundError = (cmd) =>
-  Object.assign(new Error(`not found: ${cmd}`), { code: 'ENOENT' });
-
-const getPathInfo = (cmd, opt) => {
-  const colon = opt.colon || COLON;
-
-  // If it has a slash, then we don't bother searching the pathenv.
-  // just check the file itself, and that's it.
-  const pathEnv = cmd.match(/\//) || isWindows && cmd.match(/\\/) ? ['']
-    : (
-      [
-        // windows always checks the cwd first
-        ...(isWindows ? [process.cwd()] : []),
-        ...(opt.path || process.env.PATH ||
-          /* istanbul ignore next: very unusual */ '').split(colon),
-      ]
-    );
-  const pathExtExe = isWindows
-    ? opt.pathExt || process.env.PATHEXT || '.EXE;.CMD;.BAT;.COM'
-    : '';
-  const pathExt = isWindows ? pathExtExe.split(colon) : [''];
-
-  if (isWindows) {
-    if (cmd.indexOf('.') !== -1 && pathExt[0] !== '')
-      pathExt.unshift('');
-  }
-
-  return {
-    pathEnv,
-    pathExt,
-    pathExtExe,
-  }
-};
-
-const which$1 = (cmd, opt, cb) => {
-  if (typeof opt === 'function') {
-    cb = opt;
-    opt = {};
-  }
-  if (!opt)
-    opt = {};
-
-  const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
-  const found = [];
-
-  const step = i => new Promise((resolve, reject) => {
-    if (i === pathEnv.length)
-      return opt.all && found.length ? resolve(found)
-        : reject(getNotFoundError(cmd))
-
-    const ppRaw = pathEnv[i];
-    const pathPart = /^".*"$/.test(ppRaw) ? ppRaw.slice(1, -1) : ppRaw;
-
-    const pCmd = path$2.join(pathPart, cmd);
-    const p = !pathPart && /^\.[\\\/]/.test(cmd) ? cmd.slice(0, 2) + pCmd
-      : pCmd;
-
-    resolve(subStep(p, i, 0));
-  });
-
-  const subStep = (p, i, ii) => new Promise((resolve, reject) => {
-    if (ii === pathExt.length)
-      return resolve(step(i + 1))
-    const ext = pathExt[ii];
-    isexe(p + ext, { pathExt: pathExtExe }, (er, is) => {
-      if (!er && is) {
-        if (opt.all)
-          found.push(p + ext);
-        else
-          return resolve(p + ext)
-      }
-      return resolve(subStep(p, i, ii + 1))
-    });
-  });
-
-  return cb ? step(0).then(res => cb(null, res), cb) : step(0)
-};
-
-const whichSync = (cmd, opt) => {
-  opt = opt || {};
-
-  const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
-  const found = [];
-
-  for (let i = 0; i < pathEnv.length; i ++) {
-    const ppRaw = pathEnv[i];
-    const pathPart = /^".*"$/.test(ppRaw) ? ppRaw.slice(1, -1) : ppRaw;
-
-    const pCmd = path$2.join(pathPart, cmd);
-    const p = !pathPart && /^\.[\\\/]/.test(cmd) ? cmd.slice(0, 2) + pCmd
-      : pCmd;
-
-    for (let j = 0; j < pathExt.length; j ++) {
-      const cur = p + pathExt[j];
-      try {
-        const is = isexe.sync(cur, { pathExt: pathExtExe });
-        if (is) {
-          if (opt.all)
-            found.push(cur);
-          else
-            return cur
-        }
-      } catch (ex) {}
-    }
-  }
-
-  if (opt.all && found.length)
-    return found
-
-  if (opt.nothrow)
-    return null
-
-  throw getNotFoundError(cmd)
-};
-
-var which_1 = which$1;
-which$1.sync = whichSync;
-
-var pathKey$1 = {exports: {}};
-
-const pathKey = (options = {}) => {
-	const environment = options.env || process.env;
-	const platform = options.platform || process.platform;
-
-	if (platform !== 'win32') {
-		return 'PATH';
-	}
-
-	return Object.keys(environment).reverse().find(key => key.toUpperCase() === 'PATH') || 'Path';
-};
-
-pathKey$1.exports = pathKey;
-// TODO: Remove this for the next major release
-pathKey$1.exports.default = pathKey;
-
-var pathKeyExports = pathKey$1.exports;
-
-const path$1 = require$$0$4;
-const which = which_1;
-const getPathKey = pathKeyExports;
-
-function resolveCommandAttempt(parsed, withoutPathExt) {
-    const env = parsed.options.env || process.env;
-    const cwd = process.cwd();
-    const hasCustomCwd = parsed.options.cwd != null;
-    // Worker threads do not have process.chdir()
-    const shouldSwitchCwd = hasCustomCwd && process.chdir !== undefined && !process.chdir.disabled;
-
-    // If a custom `cwd` was specified, we need to change the process cwd
-    // because `which` will do stat calls but does not support a custom cwd
-    if (shouldSwitchCwd) {
-        try {
-            process.chdir(parsed.options.cwd);
-        } catch (err) {
-            /* Empty */
-        }
-    }
-
-    let resolved;
-
-    try {
-        resolved = which.sync(parsed.command, {
-            path: env[getPathKey({ env })],
-            pathExt: withoutPathExt ? path$1.delimiter : undefined,
-        });
-    } catch (e) {
-        /* Empty */
-    } finally {
-        if (shouldSwitchCwd) {
-            process.chdir(cwd);
-        }
-    }
-
-    // If we successfully resolved, ensure that an absolute path is returned
-    // Note that when a custom `cwd` was used, we need to resolve to an absolute path based on it
-    if (resolved) {
-        resolved = path$1.resolve(hasCustomCwd ? parsed.options.cwd : '', resolved);
-    }
-
-    return resolved;
-}
-
-function resolveCommand$1(parsed) {
-    return resolveCommandAttempt(parsed) || resolveCommandAttempt(parsed, true);
-}
-
-var resolveCommand_1 = resolveCommand$1;
-
-var _escape = {};
-
-// See http://www.robvanderwoude.com/escapechars.php
-const metaCharsRegExp = /([()\][%!^"`<>&|;, *?])/g;
-
-function escapeCommand(arg) {
-    // Escape meta chars
-    arg = arg.replace(metaCharsRegExp, '^$1');
-
-    return arg;
-}
-
-function escapeArgument(arg, doubleEscapeMetaChars) {
-    // Convert to string
-    arg = `${arg}`;
-
-    // Algorithm below is based on https://qntm.org/cmd
-
-    // Sequence of backslashes followed by a double quote:
-    // double up all the backslashes and escape the double quote
-    arg = arg.replace(/(\\*)"/g, '$1$1\\"');
-
-    // Sequence of backslashes followed by the end of the string
-    // (which will become a double quote later):
-    // double up all the backslashes
-    arg = arg.replace(/(\\*)$/, '$1$1');
-
-    // All other backslashes occur literally
-
-    // Quote the whole thing:
-    arg = `"${arg}"`;
-
-    // Escape meta chars
-    arg = arg.replace(metaCharsRegExp, '^$1');
-
-    // Double escape meta chars if necessary
-    if (doubleEscapeMetaChars) {
-        arg = arg.replace(metaCharsRegExp, '^$1');
-    }
-
-    return arg;
-}
-
-_escape.command = escapeCommand;
-_escape.argument = escapeArgument;
-
-var shebangRegex$1 = /^#!(.*)/;
-
-const shebangRegex = shebangRegex$1;
-
-var shebangCommand$1 = (string = '') => {
-	const match = string.match(shebangRegex);
-
-	if (!match) {
-		return null;
-	}
-
-	const [path, argument] = match[0].replace(/#! ?/, '').split(' ');
-	const binary = path.split('/').pop();
-
-	if (binary === 'env') {
-		return argument;
-	}
-
-	return argument ? `${binary} ${argument}` : binary;
-};
-
-const fs = require$$0__default;
-const shebangCommand = shebangCommand$1;
-
-function readShebang$1(command) {
-    // Read the first 150 bytes from the file
-    const size = 150;
-    const buffer = Buffer.alloc(size);
-
-    let fd;
-
-    try {
-        fd = fs.openSync(command, 'r');
-        fs.readSync(fd, buffer, 0, size, 0);
-        fs.closeSync(fd);
-    } catch (e) { /* Empty */ }
-
-    // Attempt to extract shebang (null is returned if not a shebang)
-    return shebangCommand(buffer.toString());
-}
-
-var readShebang_1 = readShebang$1;
-
-const path = require$$0$4;
-const resolveCommand = resolveCommand_1;
-const escape$1 = _escape;
-const readShebang = readShebang_1;
-
-const isWin$1 = process.platform === 'win32';
-const isExecutableRegExp = /\.(?:com|exe)$/i;
-const isCmdShimRegExp = /node_modules[\\/].bin[\\/][^\\/]+\.cmd$/i;
-
-function detectShebang(parsed) {
-    parsed.file = resolveCommand(parsed);
-
-    const shebang = parsed.file && readShebang(parsed.file);
-
-    if (shebang) {
-        parsed.args.unshift(parsed.file);
-        parsed.command = shebang;
-
-        return resolveCommand(parsed);
-    }
-
-    return parsed.file;
-}
-
-function parseNonShell(parsed) {
-    if (!isWin$1) {
-        return parsed;
-    }
-
-    // Detect & add support for shebangs
-    const commandFile = detectShebang(parsed);
-
-    // We don't need a shell if the command filename is an executable
-    const needsShell = !isExecutableRegExp.test(commandFile);
-
-    // If a shell is required, use cmd.exe and take care of escaping everything correctly
-    // Note that `forceShell` is an hidden option used only in tests
-    if (parsed.options.forceShell || needsShell) {
-        // Need to double escape meta chars if the command is a cmd-shim located in `node_modules/.bin/`
-        // The cmd-shim simply calls execute the package bin file with NodeJS, proxying any argument
-        // Because the escape of metachars with ^ gets interpreted when the cmd.exe is first called,
-        // we need to double escape them
-        const needsDoubleEscapeMetaChars = isCmdShimRegExp.test(commandFile);
-
-        // Normalize posix paths into OS compatible paths (e.g.: foo/bar -> foo\bar)
-        // This is necessary otherwise it will always fail with ENOENT in those cases
-        parsed.command = path.normalize(parsed.command);
-
-        // Escape command & arguments
-        parsed.command = escape$1.command(parsed.command);
-        parsed.args = parsed.args.map((arg) => escape$1.argument(arg, needsDoubleEscapeMetaChars));
-
-        const shellCommand = [parsed.command].concat(parsed.args).join(' ');
-
-        parsed.args = ['/d', '/s', '/c', `"${shellCommand}"`];
-        parsed.command = process.env.comspec || 'cmd.exe';
-        parsed.options.windowsVerbatimArguments = true; // Tell node's spawn that the arguments are already escaped
-    }
-
-    return parsed;
-}
-
-function parse$1(command, args, options) {
-    // Normalize arguments, similar to nodejs
-    if (args && !Array.isArray(args)) {
-        options = args;
-        args = null;
-    }
-
-    args = args ? args.slice(0) : []; // Clone array to avoid changing the original
-    options = Object.assign({}, options); // Clone object to avoid changing the original
-
-    // Build our parsed object
-    const parsed = {
-        command,
-        args,
-        options,
-        file: undefined,
-        original: {
-            command,
-            args,
-        },
-    };
-
-    // Delegate further parsing to shell or non-shell
-    return options.shell ? parsed : parseNonShell(parsed);
-}
-
-var parse_1 = parse$1;
-
-const isWin = process.platform === 'win32';
-
-function notFoundError(original, syscall) {
-    return Object.assign(new Error(`${syscall} ${original.command} ENOENT`), {
-        code: 'ENOENT',
-        errno: 'ENOENT',
-        syscall: `${syscall} ${original.command}`,
-        path: original.command,
-        spawnargs: original.args,
-    });
-}
-
-function hookChildProcess(cp, parsed) {
-    if (!isWin) {
-        return;
-    }
-
-    const originalEmit = cp.emit;
-
-    cp.emit = function (name, arg1) {
-        // If emitting "exit" event and exit code is 1, we need to check if
-        // the command exists and emit an "error" instead
-        // See https://github.com/IndigoUnited/node-cross-spawn/issues/16
-        if (name === 'exit') {
-            const err = verifyENOENT(arg1, parsed);
-
-            if (err) {
-                return originalEmit.call(cp, 'error', err);
-            }
-        }
-
-        return originalEmit.apply(cp, arguments); // eslint-disable-line prefer-rest-params
-    };
-}
-
-function verifyENOENT(status, parsed) {
-    if (isWin && status === 1 && !parsed.file) {
-        return notFoundError(parsed.original, 'spawn');
-    }
-
-    return null;
-}
-
-function verifyENOENTSync(status, parsed) {
-    if (isWin && status === 1 && !parsed.file) {
-        return notFoundError(parsed.original, 'spawnSync');
-    }
-
-    return null;
-}
-
-var enoent$1 = {
-    hookChildProcess,
-    verifyENOENT,
-    verifyENOENTSync,
-    notFoundError,
-};
-
-const cp = require$$2$1;
-const parse = parse_1;
-const enoent = enoent$1;
-
-function spawn(command, args, options) {
-    // Parse the arguments
-    const parsed = parse(command, args, options);
-
-    // Spawn the child process
-    const spawned = cp.spawn(parsed.command, parsed.args, parsed.options);
-
-    // Hook into child process "exit" event to emit an error if the command
-    // does not exists, see: https://github.com/IndigoUnited/node-cross-spawn/issues/16
-    enoent.hookChildProcess(spawned, parsed);
-
-    return spawned;
-}
-
-function spawnSync(command, args, options) {
-    // Parse the arguments
-    const parsed = parse(command, args, options);
-
-    // Spawn the child process
-    const result = cp.spawnSync(parsed.command, parsed.args, parsed.options);
-
-    // Analyze if the command does not exist, see: https://github.com/IndigoUnited/node-cross-spawn/issues/16
-    result.error = result.error || enoent.verifyENOENTSync(result.status, parsed);
-
-    return result;
-}
-
-crossSpawn.exports = spawn;
-crossSpawn.exports.spawn = spawn;
-crossSpawn.exports.sync = spawnSync;
-
-crossSpawn.exports._parse = parse;
-crossSpawn.exports._enoent = enoent;
-
-var crossSpawnExports = crossSpawn.exports;
-var spawn$1 = /*@__PURE__*/getDefaultExportFromCjs(crossSpawnExports);
-
-/**
- * The following is modified based on source found in
- * https://github.com/facebook/create-react-app
- *
- * MIT Licensed
- * Copyright (c) 2015-present, Facebook, Inc.
- * https://github.com/facebook/create-react-app/blob/master/LICENSE
- *
- */
-/**
- * Reads the BROWSER environment variable and decides what to do with it.
- */
-function openBrowser(url, opt, logger) {
-    // The browser executable to open.
-    // See https://github.com/sindresorhus/open#app for documentation.
-    const browser = typeof opt === 'string' ? opt : process.env.BROWSER || '';
-    if (browser.toLowerCase().endsWith('.js')) {
-        executeNodeScript(browser, url, logger);
-    }
-    else if (browser.toLowerCase() !== 'none') {
-        const browserArgs = process.env.BROWSER_ARGS
-            ? process.env.BROWSER_ARGS.split(' ')
-            : [];
-        startBrowserProcess(browser, browserArgs, url);
-    }
-}
-function executeNodeScript(scriptPath, url, logger) {
-    const extraArgs = process.argv.slice(2);
-    const child = spawn$1(process.execPath, [scriptPath, ...extraArgs, url], {
-        stdio: 'inherit',
-    });
-    child.on('close', (code) => {
-        if (code !== 0) {
-            logger.error(colors$1.red(`\nThe script specified as BROWSER environment variable failed.\n\n${colors$1.cyan(scriptPath)} exited with code ${code}.`), { error: null });
-        }
-    });
-}
-const supportedChromiumBrowsers = [
-    'Google Chrome Canary',
-    'Google Chrome Dev',
-    'Google Chrome Beta',
-    'Google Chrome',
-    'Microsoft Edge',
-    'Brave Browser',
-    'Vivaldi',
-    'Chromium',
-];
-async function startBrowserProcess(browser, browserArgs, url) {
-    // If we're on OS X, the user hasn't specifically
-    // requested a different browser, we can try opening
-    // a Chromium browser with AppleScript. This lets us reuse an
-    // existing tab when possible instead of creating a new one.
-    const preferredOSXBrowser = browser === 'google chrome' ? 'Google Chrome' : browser;
-    const shouldTryOpenChromeWithAppleScript = process.platform === 'darwin' &&
-        (!preferredOSXBrowser ||
-            supportedChromiumBrowsers.includes(preferredOSXBrowser));
-    if (shouldTryOpenChromeWithAppleScript) {
-        try {
-            const ps = await execAsync('ps cax');
-            const openedBrowser = preferredOSXBrowser && ps.includes(preferredOSXBrowser)
-                ? preferredOSXBrowser
-                : supportedChromiumBrowsers.find((b) => ps.includes(b));
-            if (openedBrowser) {
-                // Try our best to reuse existing tab with AppleScript
-                await execAsync(`osascript openChrome.applescript "${encodeURI(url)}" "${openedBrowser}"`, {
-                    cwd: join$2(VITE_PACKAGE_DIR, 'bin'),
-                });
-                return true;
-            }
-        }
-        catch (err) {
-            // Ignore errors
-        }
-    }
-    // Another special case: on OS X, check if BROWSER has been set to "open".
-    // In this case, instead of passing the string `open` to `open` function (which won't work),
-    // just ignore it (thus ensuring the intended behavior, i.e. opening the system browser):
-    // https://github.com/facebook/create-react-app/pull/1690#issuecomment-283518768
-    if (process.platform === 'darwin' && browser === 'open') {
-        browser = undefined;
-    }
-    // Fallback to open
-    // (It will always open new tab)
-    try {
-        const options = browser
-            ? { app: { name: browser, arguments: browserArgs } }
-            : {};
-        open$1(url, options).catch(() => { }); // Prevent `unhandledRejection` error.
-        return true;
-    }
-    catch (err) {
-        return false;
-    }
-}
-function execAsync(command, options) {
-    return new Promise((resolve, reject) => {
-        exec(command, options, (error, stdout) => {
-            if (error) {
-                reject(error);
-            }
-            else {
-                resolve(stdout.toString());
-            }
-        });
-    });
-}
-
 function createServer(inlineConfig = {}) {
     return _createServer(inlineConfig, { ws: true });
 }
@@ -64565,7 +64896,7 @@ async function _createServer(inlineConfig = {}, options) {
         },
         openBrowser() {
             const options = server.config.server;
-            const url = server.resolvedUrls?.local[0];
+            const url = server.resolvedUrls?.local[0] ?? server.resolvedUrls?.network[0];
             if (url) {
                 const path = typeof options.open === 'string'
                     ? new URL(options.open, url).href
@@ -64959,6 +65290,10 @@ var index = {
 };
 
 /* eslint-disable */
+//@ts-nocheck
+//TODO: replace this code with https://github.com/lukeed/polka/pull/148 once it's released
+// This is based on https://github.com/preactjs/wmr/blob/main/packages/wmr/src/lib/polkompress.js
+// MIT Licensed https://github.com/preactjs/wmr/blob/main/LICENSE
 /* global Buffer */
 const noop = () => { };
 const mimes = /text|javascript|\/json|xml/i;
